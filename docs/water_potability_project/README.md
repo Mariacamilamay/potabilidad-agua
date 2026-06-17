@@ -16,7 +16,6 @@ Dashboard interactivo para el análisis exploratorio de datos (EDA) y predicció
 - [Instalación y Ejecución](#-instalación-y-ejecución)
 - [Uso del Dashboard](#-uso-del-dashboard)
 - [Dataset](#-dataset)
-- [Capturas de Pantalla](#-capturas-de-pantalla)
 - [Autores](#-autores)
 - [Licencia](#-licencia)
 
