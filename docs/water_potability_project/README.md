@@ -276,12 +276,7 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 Para preguntas o sugerencias, por favor abre un issue en GitHub.
 
-## 🙏 Agradecimientos
 
-- Dataset proporcionado por [Kaggle](https://www.kaggle.com/)
-- Documentación de [Dash](https://dash.plotly.com/)
-- Documentación de [Plotly](https://plotly.com/python/)
-- Comunidad de [Stack Overflow](https://stackoverflow.com/)
 
 ## 📚 Referencias
 
