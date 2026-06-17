@@ -69,7 +69,7 @@ water_potability_project/
 │   └── settings.json          # Configuración de VSCode
 │
 ├── assets/                    # Recursos estáticos (imágenes, CSS)
-│   └── (tus imágenes aquí)
+│   └── (tus imágenes aquí) 
 │
 ├── data/
 │   ├── water_potability.csv   # Dataset principal
@@ -199,57 +199,8 @@ El dataset contiene 3,276 muestras de agua con 10 características fisicoquímic
 
 Dataset obtenido de Kaggle: [Water Potability](https://www.kaggle.com/datasets/adityakadiwal/water-potability)
 
-## 🖼️ Capturas de Pantalla
-
-### Página Principal
-![Hero Section](assets/hero_screenshot.png)
-
-### Análisis EDA
-![EDA Section](assets/eda_screenshot.png)
-
-### Visualizaciones Interactivas
-![Interactive Plots](assets/interactive_screenshot.png)
-
-*Nota: Agrega tus propias capturas de pantalla en la carpeta `assets/`*
-
-## 🐳 Despliegue con Docker
-
-### Construir la Imagen
-
-```bash
-docker build -t water-potability-app .
-```
-
-### Ejecutar el Contenedor
-
-```bash
-docker run -p 8050:8050 water-potability-app
-```
-
-### Acceder
-
 Visita: **http://localhost:8050/**
 
-## ☁️ Despliegue en la Nube
-
-### Heroku
-
-1. Crea una cuenta en [Heroku](https://heroku.com)
-2. Instala Heroku CLI
-3. Ejecuta:
-
-```bash
-heroku login
-heroku create tu-app-name
-git push heroku main
-```
-
-### Render
-
-1. Crea una cuenta en [Render](https://render.com)
-2. Conecta tu repositorio de GitHub
-3. Render detectará automáticamente el `Procfile`
-4. ¡Listo! Se desplegará automáticamente
 
 ## 🤝 Contribuciones
 
@@ -271,22 +222,3 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 - **Andrea Padilla** - *Desarrolladora*
 - **Alberto Jimenez** - *Desarrollador*
 - **Winston Pardo** - *Desarrollador*
-
-## 📞 Contacto
-
-Para preguntas o sugerencias, por favor abre un issue en GitHub.
-
-
-
-## 📚 Referencias
-
-1. World Health Organization (WHO). Guidelines for drinking-water quality.
-2. Environmental Protection Agency (EPA). National Primary Drinking Water Regulations.
-3. Pedregosa, F., et al. (2011). Scikit-learn: Machine Learning in Python. JMLR.
-
----
-
-**⭐ Si este proyecto te fue útil, considera darle una estrella en GitHub!**
-
-**📊 Versión:** 1.0.0  
-**📅 Última actualización:** Junio 2026
