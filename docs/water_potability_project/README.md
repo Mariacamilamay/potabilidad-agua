@@ -95,8 +95,7 @@ Asegúrate de tener instalado:
 ### 1. Clonar el Repositorio
 
 ```bash
-git clone https://github.com/Mariacamilamay/potabilidad-agua/tree/master/docs/water_potability_project
-cd water_potability_project
+git clone https://github.com/Mariacamilamay/potabilidad-agua
 ```
 
 ### 2. Crear Entorno Virtual (Recomendado)
