@@ -1,0 +1,2409 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>8. Preprocesamiento de Datos &#8212; Predicción de la Potabilidad del Agua</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '08_Machine_Learning';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="7. Tratamiento de Datos Faltantes" href="07_Tratamiento_de_datos_faltantes.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Predicción de la Potabilidad del Agua</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Bienvenido a tu Libro de Jupyter
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_introduccion.html">1. Introducción</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_planteamiento_del_problema.html">2 Planteamiento del Problema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_Objetivos.html">3 Objetivos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_Justificacion.html">4 Justificación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_marco_teorico.html">5 Marco teorico</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_Analisis_exploratorio_de_datos.html">6. Analisis Exploratorio de Datos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_Tratamiento_de_datos_faltantes.html">7. Tratamiento de Datos Faltantes</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">8. Preprocesamiento de Datos</a></li>
+
+
+
+
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F08_Machine_Learning.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/08_Machine_Learning.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>8. Preprocesamiento de Datos</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">8. Preprocesamiento de Datos</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#entrenamiento-de-modelos">9. Entrenamiento de Modelos</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluacion-y-comparacion-de-modelos">10. Evaluación y Comparación de Modelos</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-profundo-del-mejor-modelo">11 Análisis Profundo del Mejor Modelo</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizacion-de-umbrales-de-decision">12. Optimización de Umbrales de Decisión</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#umbral-de-youden">12.1 Umbral de Youden</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#empaquetado-y-despliegue-del-modelo">13. Empaquetado y Despliegue del Modelo</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#prediccion-de-potabilidad-del-agua-con-machine-learning">14. Predicción de Potabilidad del Agua con Machine Learning</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modulo-de-clasificacion-busqueda-del-mejor-modelo">Módulo de Clasificación - Búsqueda del Mejor Modelo</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="preprocesamiento-de-datos">
+<h1>8. Preprocesamiento de Datos<a class="headerlink" href="#preprocesamiento-de-datos" title="Permalink to this heading">#</a></h1>
+<p>Dividimos el dataset, aplicamos <strong>IterativeImputer (MICE)</strong> para valores nulos
+y analizamos la multicolinealidad con el <strong>Factor de Inflación de la Varianza (VIF)</strong>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.experimental</span><span class="w"> </span><span class="kn">import</span> <span class="n">enable_iterative_imputer</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.impute</span><span class="w"> </span><span class="kn">import</span> <span class="n">IterativeImputer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.outliers_influence</span><span class="w"> </span><span class="kn">import</span> <span class="n">variance_inflation_factor</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;water_potability_clean.csv&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;✅ Dataset cargado&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Dataset cargado
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>Se cargó el dataset de potabilidad del agua ya limpio desde un archivo CSV usando pandas, con el objetivo de iniciar el análisis. Además, se importaron librerías para el preprocesamiento y análisis de datos (imputación de valores faltantes, escalado de variables y detección de multicolinealidad), aunque en este paso solo se realizó la lectura de los datos y la verificación de carga correcta.</p>
+<p>8.1 División Train / Test</p>
+<p>se está separando el conjunto de datos en dos partes:</p>
+<p>Train (entrenamiento): datos que se usan para enseñar al modelo cómo aprender patrones.
+Test (prueba): datos que se usan para evaluar qué tan bien funciona el modelo con información nueva que no ha visto.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">col_numericas</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;Potability&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col_numericas</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Potability&#39;</span><span class="p">]</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;X_train: </span><span class="si">{</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1"> | X_test: </span><span class="si">{</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Distribución y_train:</span><span class="se">\n</span><span class="si">{</span><span class="n">y_train</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>X_train: (2620, 9) | X_test: (656, 9)
+Distribución y_train:
+Potability
+0    0.61
+1    0.39
+Name: proportion, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>Salida de la división de datos en entrenamiento y prueba junto con la distribución de la variable objetivo.</p>
+<ol class="arabic simple">
+<li><p>Tamaño de los conjuntos
+X_train: (2620, 9) → hay 2620 filas para entrenamiento y 9 variables (columnas).
+X_test: (656, 9) → hay 656 filas para prueba y las mismas 9 variables.</p></li>
+</ol>
+<p>En resumen: la mayoría de los datos se usaron para entrenar el modelo y una parte menor para evaluarlo.</p>
+<ol class="arabic simple" start="2">
+<li><p>Distribución de y_train</p></li>
+</ol>
+<p>Esto significa:</p>
+<p>61% = 0 (no potable)</p>
+<p>39% = 1 (potable)</p>
+<p>Es decir, el dataset está ligeramente desbalanceado, porque hay más muestras de agua no potable que potable.</p>
+<p>8.2 Imputación MICE (IterativeImputer)</p>
+<blockquote>
+<div><p><strong>MICE</strong> (Multiple Imputation by Chained Equations) modela cada variable con nulos
+como función del resto, iterando hasta convergencia. Es superior a la imputación
+simple (media/mediana) porque preserva las correlaciones entre variables.</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">imputer</span> <span class="o">=</span> <span class="n">IterativeImputer</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">X_train_imp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">imputer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="n">col_numericas</span><span class="p">)</span>
+<span class="n">X_test_imp</span>  <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">imputer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span>      <span class="n">columns</span><span class="o">=</span><span class="n">col_numericas</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Nulos después de MICE:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Train: </span><span class="si">{</span><span class="n">X_train_imp</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Test:  </span><span class="si">{</span><span class="n">X_test_imp</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Nulos después de MICE:
+  Train: 0
+  Test:  0
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>No quedaron valores faltantes en ninguna de las variables, ni en el conjunto de entrenamiento ni en el de prueba.</p>
+<p>8.3 Análisis de Multicolinealidad (VIF)</p>
+<p>VIF &gt; 10 indica multicolinealidad problemática entre variables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaler_vif</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">X_scaled_vif</span> <span class="o">=</span> <span class="n">scaler_vif</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train_imp</span><span class="p">)</span>
+
+<span class="n">vif_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">vif_data</span><span class="p">[</span><span class="s1">&#39;Variable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">col_numericas</span>
+<span class="n">vif_data</span><span class="p">[</span><span class="s1">&#39;VIF&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">variance_inflation_factor</span><span class="p">(</span><span class="n">X_scaled_vif</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X_scaled_vif</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="p">]</span>
+<span class="n">vif_data</span> <span class="o">=</span> <span class="n">vif_data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;VIF&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=== FACTOR DE INFLACIÓN DE VARIANZA ===&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">vif_data</span><span class="p">)</span>
+
+<span class="n">alta_colinealidad</span> <span class="o">=</span> <span class="n">vif_data</span><span class="p">[</span><span class="n">vif_data</span><span class="p">[</span><span class="s1">&#39;VIF&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">alta_colinealidad</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">✅ No se detectó multicolinealidad crítica (VIF &lt; 10 en todas las variables)&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">⚠️ Variables con VIF &gt; 10:</span><span class="se">\n</span><span class="si">{</span><span class="n">alta_colinealidad</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>========================================
+=== FACTOR DE INFLACIÓN DE VARIANZA ===
+========================================
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Variable</th>
+      <th>VIF</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>Solids</td>
+      <td>1.080878</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Sulfate</td>
+      <td>1.074714</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hardness</td>
+      <td>1.021571</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>ph</td>
+      <td>1.020693</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Chloramines</td>
+      <td>1.012001</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Organic_carbon</td>
+      <td>1.005447</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Conductivity</td>
+      <td>1.003359</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Turbidity</td>
+      <td>1.002532</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Trihalomethanes</td>
+      <td>1.002149</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ No se detectó multicolinealidad crítica (VIF &lt; 10 en todas las variables)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>El modelo es estable en términos de variables: no hay multicolinealidad significativa entre las características del dataset, por lo que todas las variables pueden mantenerse sin riesgo de redundancia.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="entrenamiento-de-modelos">
+<h1>9. Entrenamiento de Modelos<a class="headerlink" href="#entrenamiento-de-modelos" title="Permalink to this heading">#</a></h1>
+<p>Entrenamos 5 modelos usando <strong>GridSearchCV</strong> con validación cruzada K=5,
+optimizando la métrica <strong>ROC AUC</strong>.</p>
+<p>Cada modelo va encapsulado en un <strong>Pipeline</strong> que incluye:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IterativeImputer</span></code> — imputación MICE</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code> — escalado</p></li>
+<li><p>Clasificador — el modelo a evaluar</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">cross_val_score</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.experimental</span><span class="w"> </span><span class="kn">import</span> <span class="n">enable_iterative_imputer</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.impute</span><span class="w"> </span><span class="kn">import</span> <span class="n">IterativeImputer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neighbors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNeighborsClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearSVC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xgboost</span><span class="w"> </span><span class="kn">import</span> <span class="n">XGBClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_auc_score</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">recall_score</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">confusion_matrix</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;water_potability_clean.csv&#39;</span><span class="p">)</span>
+<span class="n">col_numericas</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;Potability&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col_numericas</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Potability&#39;</span><span class="p">]</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;✅ Setup completo&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Setup completo
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>Se cargó el dataset de potabilidad del agua, se seleccionaron las variables numéricas como predictores (X) y la variable objetivo (Potability), y se dividieron los datos en entrenamiento (80%) y prueba (20%) manteniendo la proporción de clases. Además, se importaron varios modelos y métricas para comparar y evaluar su desempeño en la clasificación.</p>
+<p>9.1 Función de Evaluación</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">evaluar_modelo</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">):</span>
+    <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">y_proba</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="n">y_proba</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    
+    <span class="n">resultado</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;modelo&#39;</span><span class="p">:</span> <span class="n">nombre</span><span class="p">,</span>
+        <span class="s1">&#39;roc_auc_test&#39;</span><span class="p">:</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_proba</span><span class="p">),</span>
+        <span class="s1">&#39;accuracy_test&#39;</span><span class="p">:</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;recall_test&#39;</span><span class="p">:</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;f1_test&#39;</span><span class="p">:</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  ROC AUC: </span><span class="si">{</span><span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;roc_auc_test&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1"> | Accuracy: </span><span class="si">{</span><span class="n">resultado</span><span class="p">[</span><span class="s2">&quot;accuracy_test&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">resultado</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>Se definió una función para entrenar y evaluar modelos de clasificación. Esta función ajusta el modelo con los datos de entrenamiento, realiza predicciones en el conjunto de prueba y calcula métricas clave como ROC AUC, accuracy, recall y F1-score, permitiendo comparar el desempeño de diferentes modelos de forma estandarizada.</p>
+<p>9.2 Modelo 1: Regresión Logística (Baseline)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline_lr</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
+    <span class="n">IterativeImputer</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+    <span class="n">StandardScaler</span><span class="p">(),</span>
+    <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">param_grid_lr</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;logisticregression__C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+    <span class="s1">&#39;logisticregression__solver&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">,</span> <span class="s1">&#39;liblinear&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;logisticregression__class_weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;balanced&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">grid_search_lr</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipeline_lr</span><span class="p">,</span> <span class="n">param_grid_lr</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">grid_search_lr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">mejor_pipeline_lr</span> <span class="o">=</span> <span class="n">grid_search_lr</span><span class="o">.</span><span class="n">best_estimator_</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Mejores params: </span><span class="si">{</span><span class="n">grid_search_lr</span><span class="o">.</span><span class="n">best_params_</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ROC AUC (CV): </span><span class="si">{</span><span class="n">grid_search_lr</span><span class="o">.</span><span class="n">best_score_</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">resultado_lr</span> <span class="o">=</span> <span class="n">evaluar_modelo</span><span class="p">(</span><span class="s1">&#39;Regresión Logística&#39;</span><span class="p">,</span> <span class="n">mejor_pipeline_lr</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mejores params: {&#39;logisticregression__C&#39;: 10, &#39;logisticregression__class_weight&#39;: None, &#39;logisticregression__solver&#39;: &#39;liblinear&#39;}
+ROC AUC (CV): 0.4795
+  ROC AUC: 0.5474 | Accuracy: 0.6098
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>Se realizó la optimización de un modelo de Regresión Logística usando búsqueda de hiperparámetros (GridSearchCV).</p>
+<p>Los mejores parámetros encontrados fueron:</p>
+<p>C = 10 (regularización más flexible)</p>
+<p>solver = liblinear</p>
+<p>class_weight = None (sin ajuste por desbalance)</p>
+<p>Resultados del modelo</p>
+<p>ROC AUC (Cross Validation): 0.4795</p>
+<p>→ Rendimiento en validación cruzada peor que aleatorio (≈ 0.5)</p>
+<p>ROC AUC (test): 0.5474</p>
+<p>→ Rendimiento en prueba ligeramente mejor que aleatorio</p>
+<p>Accuracy: 0.6098</p>
+<p>→ El modelo acierta ~61% de los casos</p>
+<p>9.3 Modelo 2: KNN</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline_knn</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
+    <span class="n">IterativeImputer</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+    <span class="n">StandardScaler</span><span class="p">(),</span>
+    <span class="n">KNeighborsClassifier</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">param_grid_knn</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;kneighborsclassifier__n_neighbors&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">21</span><span class="p">],</span>
+    <span class="s1">&#39;kneighborsclassifier__weights&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;distance&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;kneighborsclassifier__metric&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;euclidean&#39;</span><span class="p">,</span> <span class="s1">&#39;manhattan&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">grid_search_knn</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipeline_knn</span><span class="p">,</span> <span class="n">param_grid_knn</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">grid_search_knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">mejor_pipeline_knn</span> <span class="o">=</span> <span class="n">grid_search_knn</span><span class="o">.</span><span class="n">best_estimator_</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Mejores params: </span><span class="si">{</span><span class="n">grid_search_knn</span><span class="o">.</span><span class="n">best_params_</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">resultado_knn</span> <span class="o">=</span> <span class="n">evaluar_modelo</span><span class="p">(</span><span class="s1">&#39;KNN&#39;</span><span class="p">,</span> <span class="n">mejor_pipeline_knn</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mejores params: {&#39;kneighborsclassifier__metric&#39;: &#39;euclidean&#39;, &#39;kneighborsclassifier__n_neighbors&#39;: 21, &#39;kneighborsclassifier__weights&#39;: &#39;distance&#39;}
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  ROC AUC: 0.6163 | Accuracy: 0.6387
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>Se entrenó y optimizó un modelo K-Nearest Neighbors (KNN) mediante búsqueda de hiperparámetros, obteniendo como mejores parámetros metric=’euclidean’, n_neighbors=21 y weights=’distance’; el modelo alcanzó un ROC AUC de 0.6163 y una accuracy de 0.6387, lo que indica un desempeño moderado, con una capacidad de discriminación entre clases mejor que los modelos anteriores (ligeramente superior al azar), aunque aún con margen de mejora en la clasificación de la potabilidad del agua.</p>
+<p>9.4 Modelo 3: SVM Lineal</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline_svc</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
+    <span class="n">IterativeImputer</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+    <span class="n">StandardScaler</span><span class="p">(),</span>
+    <span class="n">LinearSVC</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">param_grid_svc</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;linearsvc__C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+    <span class="s1">&#39;linearsvc__class_weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;balanced&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">grid_search_svc</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipeline_svc</span><span class="p">,</span> <span class="n">param_grid_svc</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">grid_search_svc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">mejor_pipeline_svc</span> <span class="o">=</span> <span class="n">grid_search_svc</span><span class="o">.</span><span class="n">best_estimator_</span>
+
+<span class="n">resultado_svc</span> <span class="o">=</span> <span class="n">evaluar_modelo</span><span class="p">(</span><span class="s1">&#39;SVM Lineal&#39;</span><span class="p">,</span> <span class="n">mejor_pipeline_svc</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  ROC AUC: 0.5475 | Accuracy: 0.6098
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>El modelo obtuvo un ROC AUC de 0.5475 y una accuracy de 0.6098, lo que indica un desempeño apenas superior al azar en la capacidad de discriminación entre clases, mientras que la exactitud sugiere que acierta aproximadamente el 61% de los casos, mostrando un rendimiento moderado pero limitado para diferenciar correctamente entre agua potable y no potable.</p>
+<p>9.5 Modelo 4: Random Forest</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline_rf</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
+    <span class="n">IterativeImputer</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+    <span class="n">StandardScaler</span><span class="p">(),</span>
+    <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">param_grid_rf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;randomforestclassifier__n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">],</span>
+    <span class="s1">&#39;randomforestclassifier__max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+    <span class="s1">&#39;randomforestclassifier__min_samples_split&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="s1">&#39;randomforestclassifier__class_weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;balanced&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">grid_search_rf</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipeline_rf</span><span class="p">,</span> <span class="n">param_grid_rf</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">grid_search_rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">mejor_pipeline_rf</span> <span class="o">=</span> <span class="n">grid_search_rf</span><span class="o">.</span><span class="n">best_estimator_</span>
+
+<span class="n">resultado_rf</span> <span class="o">=</span> <span class="n">evaluar_modelo</span><span class="p">(</span><span class="s1">&#39;Random Forest&#39;</span><span class="p">,</span> <span class="n">mejor_pipeline_rf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">line</span> <span class="mi">15</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="n">param_grid_rf</span> <span class="o">=</span> <span class="p">{</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="s1">&#39;randomforestclassifier__n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">],</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span>     <span class="s1">&#39;randomforestclassifier__max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span>     <span class="s1">&#39;randomforestclassifier__min_samples_split&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+<span class="g g-Whitespace">     </span><span class="mi">11</span>     <span class="s1">&#39;randomforestclassifier__class_weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;balanced&#39;</span><span class="p">]</span>
+<span class="g g-Whitespace">     </span><span class="mi">12</span> <span class="p">}</span>
+<span class="g g-Whitespace">     </span><span class="mi">14</span> <span class="n">grid_search_rf</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipeline_rf</span><span class="p">,</span> <span class="n">param_grid_rf</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">15</span> <span class="n">grid_search_rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">16</span> <span class="n">mejor_pipeline_rf</span> <span class="o">=</span> <span class="n">grid_search_rf</span><span class="o">.</span><span class="n">best_estimator_</span>
+<span class="g g-Whitespace">     </span><span class="mi">18</span> <span class="n">resultado_rf</span> <span class="o">=</span> <span class="n">evaluar_modelo</span><span class="p">(</span><span class="s1">&#39;Random Forest&#39;</span><span class="p">,</span> <span class="n">mejor_pipeline_rf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+<span class="nn">File ~\AppDatal\miniconda3\envs\water_ml\lib\site-packages\sklearn\base.py:1389,</span> in <span class="ni">_fit_context.&lt;locals&gt;.decorator.&lt;locals&gt;.wrapper</span><span class="nt">(estimator, *args, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1382</span>     <span class="n">estimator</span><span class="o">.</span><span class="n">_validate_params</span><span class="p">()</span>
+<span class="g g-Whitespace">   </span><span class="mi">1384</span> <span class="k">with</span> <span class="n">config_context</span><span class="p">(</span>
+<span class="g g-Whitespace">   </span><span class="mi">1385</span>     <span class="n">skip_parameter_validation</span><span class="o">=</span><span class="p">(</span>
+<span class="g g-Whitespace">   </span><span class="mi">1386</span>         <span class="n">prefer_skip_nested_validation</span> <span class="ow">or</span> <span class="n">global_skip_validation</span>
+<span class="g g-Whitespace">   </span><span class="mi">1387</span>     <span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1388</span> <span class="p">):</span>
+<span class="ne">-&gt; </span><span class="mi">1389</span>     <span class="k">return</span> <span class="n">fit_method</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File ~\AppDatal\miniconda3\envs\water_ml\lib\site-packages\sklearn\model_selection\_search.py:1024,</span> in <span class="ni">BaseSearchCV.fit</span><span class="nt">(self, X, y, **params)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1018</span>     <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format_results</span><span class="p">(</span>
+<span class="g g-Whitespace">   </span><span class="mi">1019</span>         <span class="n">all_candidate_params</span><span class="p">,</span> <span class="n">n_splits</span><span class="p">,</span> <span class="n">all_out</span><span class="p">,</span> <span class="n">all_more_results</span>
+<span class="g g-Whitespace">   </span><span class="mi">1020</span>     <span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1022</span>     <span class="k">return</span> <span class="n">results</span>
+<span class="ne">-&gt; </span><span class="mi">1024</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_search</span><span class="p">(</span><span class="n">evaluate_candidates</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1026</span> <span class="c1"># multimetric is determined here because in the case of a callable</span>
+<span class="g g-Whitespace">   </span><span class="mi">1027</span> <span class="c1"># self.scoring the return type is only known after calling</span>
+<span class="g g-Whitespace">   </span><span class="mi">1028</span> <span class="n">first_test_score</span> <span class="o">=</span> <span class="n">all_out</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;test_scores&quot;</span><span class="p">]</span>
+
+<span class="nn">File ~\AppDatal\miniconda3\envs\water_ml\lib\site-packages\sklearn\model_selection\_search.py:1571,</span> in <span class="ni">GridSearchCV._run_search</span><span class="nt">(self, evaluate_candidates)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1569</span> <span class="k">def</span><span class="w"> </span><span class="nf">_run_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">evaluate_candidates</span><span class="p">):</span>
+<span class="g g-Whitespace">   </span><span class="mi">1570</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;Search all candidates in param_grid&quot;&quot;&quot;</span>
+<span class="ne">-&gt; </span><span class="mi">1571</span>     <span class="n">evaluate_candidates</span><span class="p">(</span><span class="n">ParameterGrid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param_grid</span><span class="p">))</span>
+
+<span class="nn">File ~\AppDatal\miniconda3\envs\water_ml\lib\site-packages\sklearn\model_selection\_search.py:970,</span> in <span class="ni">BaseSearchCV.fit.&lt;locals&gt;.evaluate_candidates</span><span class="nt">(candidate_params, cv, more_results)</span>
+<span class="g g-Whitespace">    </span><span class="mi">962</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">963</span>     <span class="nb">print</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">964</span>         <span class="s2">&quot;Fitting </span><span class="si">{0}</span><span class="s2"> folds for each of </span><span class="si">{1}</span><span class="s2"> candidates,&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">965</span>         <span class="s2">&quot; totalling </span><span class="si">{2}</span><span class="s2"> fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">966</span>             <span class="n">n_splits</span><span class="p">,</span> <span class="n">n_candidates</span><span class="p">,</span> <span class="n">n_candidates</span> <span class="o">*</span> <span class="n">n_splits</span>
+<span class="g g-Whitespace">    </span><span class="mi">967</span>         <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">968</span>     <span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">970</span> <span class="n">out</span> <span class="o">=</span> <span class="n">parallel</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">971</span>     <span class="n">delayed</span><span class="p">(</span><span class="n">_fit_and_score</span><span class="p">)(</span>
+<span class="g g-Whitespace">    </span><span class="mi">972</span>         <span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">),</span>
+<span class="g g-Whitespace">    </span><span class="mi">973</span>         <span class="n">X</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">974</span>         <span class="n">y</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">975</span>         <span class="n">train</span><span class="o">=</span><span class="n">train</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">976</span>         <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">977</span>         <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">978</span>         <span class="n">split_progress</span><span class="o">=</span><span class="p">(</span><span class="n">split_idx</span><span class="p">,</span> <span class="n">n_splits</span><span class="p">),</span>
+<span class="g g-Whitespace">    </span><span class="mi">979</span>         <span class="n">candidate_progress</span><span class="o">=</span><span class="p">(</span><span class="n">cand_idx</span><span class="p">,</span> <span class="n">n_candidates</span><span class="p">),</span>
+<span class="g g-Whitespace">    </span><span class="mi">980</span>         <span class="o">**</span><span class="n">fit_and_score_kwargs</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">981</span>     <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">982</span>     <span class="k">for</span> <span class="p">(</span><span class="n">cand_idx</span><span class="p">,</span> <span class="n">parameters</span><span class="p">),</span> <span class="p">(</span><span class="n">split_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">))</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">983</span>         <span class="nb">enumerate</span><span class="p">(</span><span class="n">candidate_params</span><span class="p">),</span>
+<span class="g g-Whitespace">    </span><span class="mi">984</span>         <span class="nb">enumerate</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">routed_params</span><span class="o">.</span><span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">)),</span>
+<span class="g g-Whitespace">    </span><span class="mi">985</span>     <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">986</span> <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">988</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">989</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">990</span>         <span class="s2">&quot;No fits were performed. &quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">991</span>         <span class="s2">&quot;Was the CV iterator empty? &quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">992</span>         <span class="s2">&quot;Were there no candidates?&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">993</span>     <span class="p">)</span>
+
+<span class="nn">File ~\AppDatal\miniconda3\envs\water_ml\lib\site-packages\sklearn\utils\parallel.py:77,</span> in <span class="ni">Parallel.__call__</span><span class="nt">(self, iterable)</span>
+<span class="g g-Whitespace">     </span><span class="mi">72</span> <span class="n">config</span> <span class="o">=</span> <span class="n">get_config</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">73</span> <span class="n">iterable_with_config</span> <span class="o">=</span> <span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">74</span>     <span class="p">(</span><span class="n">_with_config</span><span class="p">(</span><span class="n">delayed_func</span><span class="p">,</span> <span class="n">config</span><span class="p">),</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">75</span>     <span class="k">for</span> <span class="n">delayed_func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="ow">in</span> <span class="n">iterable</span>
+<span class="g g-Whitespace">     </span><span class="mi">76</span> <span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">77</span> <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">iterable_with_config</span><span class="p">)</span>
+
+<span class="nn">File ~\AppDatal\miniconda3\envs\water_ml\lib\site-packages\joblib\parallel.py:2072,</span> in <span class="ni">Parallel.__call__</span><span class="nt">(self, iterable)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2066</span> <span class="c1"># The first item from the output is blank, but it makes the interpreter</span>
+<span class="g g-Whitespace">   </span><span class="mi">2067</span> <span class="c1"># progress until it enters the Try/Except block of the generator and</span>
+<span class="g g-Whitespace">   </span><span class="mi">2068</span> <span class="c1"># reaches the first `yield` statement. This starts the asynchronous</span>
+<span class="g g-Whitespace">   </span><span class="mi">2069</span> <span class="c1"># dispatch of the tasks to the workers.</span>
+<span class="g g-Whitespace">   </span><span class="mi">2070</span> <span class="nb">next</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">2072</span> <span class="k">return</span> <span class="n">output</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_generator</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+<span class="nn">File ~\AppDatal\miniconda3\envs\water_ml\lib\site-packages\joblib\parallel.py:1682,</span> in <span class="ni">Parallel._get_outputs</span><span class="nt">(self, iterator, pre_dispatch)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1679</span>     <span class="k">yield</span>
+<span class="g g-Whitespace">   </span><span class="mi">1681</span>     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="o">.</span><span class="n">retrieval_context</span><span class="p">():</span>
+<span class="ne">-&gt; </span><span class="mi">1682</span>         <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrieve</span><span class="p">()</span>
+<span class="g g-Whitespace">   </span><span class="mi">1684</span> <span class="k">except</span> <span class="ne">GeneratorExit</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1685</span>     <span class="c1"># The generator has been garbage collected before being fully</span>
+<span class="g g-Whitespace">   </span><span class="mi">1686</span>     <span class="c1"># consumed. This aborts the remaining tasks if possible and warn</span>
+<span class="g g-Whitespace">   </span><span class="mi">1687</span>     <span class="c1"># the user if necessary.</span>
+<span class="g g-Whitespace">   </span><span class="mi">1688</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="nn">File ~\AppDatal\miniconda3\envs\water_ml\lib\site-packages\joblib\parallel.py:1800,</span> in <span class="ni">Parallel._retrieve</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1789</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_ordered</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1790</span>     <span class="c1"># Case ordered: wait for completion (or error) of the next job</span>
+<span class="g g-Whitespace">   </span><span class="mi">1791</span>     <span class="c1"># that have been dispatched and not retrieved yet. If no job</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1795</span>     <span class="c1"># control only have to be done on the amount of time the next</span>
+<span class="g g-Whitespace">   </span><span class="mi">1796</span>     <span class="c1"># dispatched job is pending.</span>
+<span class="g g-Whitespace">   </span><span class="mi">1797</span>     <span class="k">if</span> <span class="p">(</span><span class="n">nb_jobs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+<span class="g g-Whitespace">   </span><span class="mi">1798</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_jobs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_status</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">)</span> <span class="o">==</span> <span class="n">TASK_PENDING</span>
+<span class="g g-Whitespace">   </span><span class="mi">1799</span>     <span class="p">):</span>
+<span class="ne">-&gt; </span><span class="mi">1800</span>         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1801</span>         <span class="k">continue</span>
+<span class="g g-Whitespace">   </span><span class="mi">1803</span> <span class="k">elif</span> <span class="n">nb_jobs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1804</span>     <span class="c1"># Case unordered: jobs are added to the list of jobs to</span>
+<span class="g g-Whitespace">   </span><span class="mi">1805</span>     <span class="c1"># retrieve `self._jobs` only once completed or in error, which</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1811</span>     <span class="c1"># timeouts before any other dispatched job has completed and</span>
+<span class="g g-Whitespace">   </span><span class="mi">1812</span>     <span class="c1"># been added to `self._jobs` to be retrieved.</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>El modelo de Random Forest obtuvo un ROC AUC de 0.6585 y una accuracy de 0.6723, lo que indica un desempeño moderado con una capacidad de clasificación aceptable; en comparación con modelos anteriores, mejora la discriminación entre agua potable y no potable, aunque todavía no es un rendimiento alto, por lo que aún existe margen para optimizar el modelo y aumentar su capacidad predictiva.</p>
+<p>9.6 Modelo 5: XGBoost</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline_xgb</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
+    <span class="n">IterativeImputer</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+    <span class="n">StandardScaler</span><span class="p">(),</span>
+    <span class="n">XGBClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">use_label_encoder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eval_metric</span><span class="o">=</span><span class="s1">&#39;logloss&#39;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">param_grid_xgb</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;xgbclassifier__n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">],</span>
+    <span class="s1">&#39;xgbclassifier__learning_rate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+    <span class="s1">&#39;xgbclassifier__max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span>
+    <span class="s1">&#39;xgbclassifier__scale_pos_weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">y_train</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">/</span><span class="p">(</span><span class="n">y_train</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()]</span>
+<span class="p">}</span>
+
+<span class="n">grid_search_xgb</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipeline_xgb</span><span class="p">,</span> <span class="n">param_grid_xgb</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">grid_search_xgb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">mejor_pipeline_xgb</span> <span class="o">=</span> <span class="n">grid_search_xgb</span><span class="o">.</span><span class="n">best_estimator_</span>
+
+<span class="n">resultado_xgb</span> <span class="o">=</span> <span class="n">evaluar_modelo</span><span class="p">(</span><span class="s1">&#39;XGBoost&#39;</span><span class="p">,</span> <span class="n">mejor_pipeline_xgb</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  ROC AUC: 0.6179 | Accuracy: 0.6098
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>El modelo XGBoost obtuvo un ROC AUC de 0.6179 y una accuracy de 0.6098, lo que indica un desempeño moderado pero inferior al de Random Forest, con una capacidad de discriminación limitada entre clases; aunque supera ligeramente el azar, aún presenta margen de mejora en la predicción de la potabilidad del agua.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="evaluacion-y-comparacion-de-modelos">
+<h1>10. Evaluación y Comparación de Modelos<a class="headerlink" href="#evaluacion-y-comparacion-de-modelos" title="Permalink to this heading">#</a></h1>
+<p>Comparamos los 5 modelos mediante boxplot de ROC AUC en los 5 folds
+y una tabla resumen con todas las métricas clave.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Este capítulo asume que los objetos <code class="docutils literal notranslate"><span class="pre">grid_search_*</span></code> y <code class="docutils literal notranslate"><span class="pre">resultado_*</span></code>
+ya existen en memoria (ejecutar capítulo 3 primero, o cargarlos desde disco).</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="c1"># ------------------------------------------------------------------</span>
+<span class="c1"># Reemplazar por los objetos reales tras ejecutar cap. 9</span>
+<span class="c1"># ------------------------------------------------------------------</span>
+<span class="n">modelos_grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Regresión Logística&#39;</span><span class="p">:</span> <span class="n">grid_search_lr</span><span class="p">,</span>
+    <span class="s1">&#39;KNN&#39;</span><span class="p">:</span> <span class="n">grid_search_knn</span><span class="p">,</span>
+    <span class="s1">&#39;SVM Lineal&#39;</span><span class="p">:</span> <span class="n">grid_search_svc</span><span class="p">,</span>
+    <span class="s1">&#39;Random Forest&#39;</span><span class="p">:</span> <span class="n">grid_search_rf</span><span class="p">,</span>
+    <span class="s1">&#39;XGBoost&#39;</span><span class="p">:</span> <span class="n">grid_search_xgb</span>
+<span class="p">}</span>
+
+<span class="n">resultados_comparacion</span> <span class="o">=</span> <span class="p">[</span><span class="n">resultado_lr</span><span class="p">,</span> <span class="n">resultado_knn</span><span class="p">,</span> <span class="n">resultado_svc</span><span class="p">,</span> <span class="n">resultado_rf</span><span class="p">,</span> <span class="n">resultado_xgb</span><span class="p">]</span>
+<span class="c1"># ------------------------------------------------------------------</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>Este código organiza los resultados de varios modelos de Machine Learning para poder compararlos fácilmente. En modelos_grid se agrupan los modelos ya optimizados con GridSearchCV (Regresión Logística, KNN, SVM, Random Forest y XGBoost), y en resultados_comparacion se recopilan las métricas obtenidas por cada uno (como ROC AUC, accuracy, recall y F1). En conjunto, esta estructura permite analizar y comparar el desempeño de todos los modelos en un solo paso para identificar cuál es el mejor para el problema de potabilidad del agua.</p>
+<p>10.1 Boxplot de Estabilidad (ROC AUC por Fold)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_grafico</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">grid</span> <span class="ow">in</span> <span class="n">modelos_grid</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_index_</span>
+    <span class="n">data_grafico</span><span class="p">[</span><span class="n">nombre</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">grid</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;split</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">_test_score&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="p">]</span>
+
+<span class="n">df_boxplot</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_grafico</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_boxplot</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Comparación de Estabilidad de Modelos</span><span class="se">\n</span><span class="s1">ROC AUC en Validación Cruzada (K=5)&#39;</span><span class="p">,</span>
+          <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;ROC AUC Score&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Azar (0.5)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/e7e3c01b5d7909d93a5f1a76a6f1d3649a375b989f2548e30c4c09b22421d49e.png" src="_images/e7e3c01b5d7909d93a5f1a76a6f1d3649a375b989f2548e30c4c09b22421d49e.png" />
+</div>
+</div>
+<p>Interpretación</p>
+<p>Este código construye un gráfico comparativo de la estabilidad de los modelos usando los resultados de validación cruzada (K=5) obtenidos en GridSearchCV. Primero, extrae para cada modelo los valores de ROC AUC en cada uno de los 5 folds utilizando el mejor conjunto de hiperparámetros (best_index_). Luego organiza esos resultados en un DataFrame y genera un boxplot que permite comparar la distribución del desempeño de cada modelo. Finalmente, el gráfico muestra qué tan estables son los modelos y qué tan bien rinden frente al valor de referencia del azar (0.5), indicando visualmente cuál modelo tiene mejor y más consistente capacidad predictiva.</p>
+<p>10.2 Tabla Comparativa Final</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_comparacion</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span>
+        <span class="s1">&#39;Modelo&#39;</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;modelo&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;ROC AUC&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;roc_auc_test&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;Accuracy&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;accuracy_test&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;Recall&#39;</span><span class="p">:</span>   <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;recall_test&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;F1-Score&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;f1_test&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resultados_comparacion</span>
+<span class="p">])</span>
+
+<span class="n">df_comparacion</span><span class="p">[</span><span class="s1">&#39;_roc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_comparacion</span><span class="p">[</span><span class="s1">&#39;ROC AUC&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">df_comparacion</span> <span class="o">=</span> <span class="n">df_comparacion</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;_roc&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_roc&#39;</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=== TABLA COMPARATIVA (ordenada por ROC AUC) ===&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_comparacion</span><span class="p">)</span>
+
+<span class="n">mejor_modelo_nombre</span> <span class="o">=</span> <span class="n">df_comparacion</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Modelo&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> MEJOR MODELO: </span><span class="si">{</span><span class="n">mejor_modelo_nombre</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
+=== TABLA COMPARATIVA (ordenada por ROC AUC) ===
+============================================================
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Modelo</th>
+      <th>ROC AUC</th>
+      <th>Accuracy</th>
+      <th>Recall</th>
+      <th>F1-Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3</th>
+      <td>Random Forest</td>
+      <td>0.6585</td>
+      <td>0.6723</td>
+      <td>0.3047</td>
+      <td>0.4205</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>XGBoost</td>
+      <td>0.6179</td>
+      <td>0.6098</td>
+      <td>0.4375</td>
+      <td>0.4667</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>KNN</td>
+      <td>0.6163</td>
+      <td>0.6387</td>
+      <td>0.2227</td>
+      <td>0.3248</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>SVM Lineal</td>
+      <td>0.5475</td>
+      <td>0.6098</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Regresión Logística</td>
+      <td>0.5474</td>
+      <td>0.6098</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> MEJOR MODELO: Random Forest
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>Se realizó una comparación de varios modelos de clasificación para predecir la potabilidad del agua, evaluando métricas como ROC AUC, accuracy, recall y F1-score. El mejor desempeño lo obtuvo Random Forest con un ROC AUC de 0.6585 y accuracy de 0.6723, mostrando la mayor capacidad de discriminación entre clases, aunque con un recall moderado (0.3047).</p>
+<p>En segundo lugar estuvo XGBoost con buen balance entre recall (0.4375) y F1-score (0.4667), seguido por KNN.</p>
+<p>Los modelos de Regresión Logística y SVM Lineal presentaron el peor rendimiento, con recall y F1-score de 0, lo que indica que no lograron identificar correctamente la clase positiva.</p>
+<p>En conclusión, Random Forest fue seleccionado como el mejor modelo por su mayor capacidad predictiva global.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="analisis-profundo-del-mejor-modelo">
+<h1>11 Análisis Profundo del Mejor Modelo<a class="headerlink" href="#analisis-profundo-del-mejor-modelo" title="Permalink to this heading">#</a></h1>
+<p>Generamos la <strong>Curva ROC</strong>, la <strong>Matriz de Confusión</strong> y
+la <strong>Importancia de Variables</strong> para el modelo ganador.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">roc_auc_score</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">ConfusionMatrixDisplay</span>
+
+<span class="c1"># Asume que mejor_pipeline y mejor_modelo_nombre están definidos (cap. 9)</span>
+<span class="c1"># Ejemplo manual:</span>
+<span class="c1"># mejor_modelo_nombre = &#39;random_forest&#39;</span>
+<span class="c1"># mejor_pipeline = mejor_pipeline_rf</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Interpretación</p>
+<p>Este código prepara la evaluación final del mejor modelo de clasificación, utilizando métricas y gráficas para analizar su desempeño. Importa herramientas para calcular la curva ROC, el AUC y la matriz de confusión, que permiten medir tanto la capacidad de discriminación del modelo como sus aciertos y errores en la predicción. En este punto se asume que ya se seleccionó un mejor modelo (por ejemplo, XGBoost o Random Forest) y su pipeline asociado, con el objetivo de realizar una evaluación más visual y detallada de su rendimiento final sobre los datos de prueba.</p>
+<p>11.1 Curva ROC</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline_lr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">pipeline_rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">pipeline_xgb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style>#sk-container-id-1 {
+  /* Definition of color scheme common for light and dark mode */
+  --sklearn-color-text: #000;
+  --sklearn-color-text-muted: #666;
+  --sklearn-color-line: gray;
+  /* Definition of color scheme for unfitted estimators */
+  --sklearn-color-unfitted-level-0: #fff5e6;
+  --sklearn-color-unfitted-level-1: #f6e4d2;
+  --sklearn-color-unfitted-level-2: #ffe0b3;
+  --sklearn-color-unfitted-level-3: chocolate;
+  /* Definition of color scheme for fitted estimators */
+  --sklearn-color-fitted-level-0: #f0f8ff;
+  --sklearn-color-fitted-level-1: #d4ebff;
+  --sklearn-color-fitted-level-2: #b3dbfd;
+  --sklearn-color-fitted-level-3: cornflowerblue;
+
+  /* Specific color for light theme */
+  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
+  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-icon: #696969;
+
+  @media (prefers-color-scheme: dark) {
+    /* Redefinition of color scheme for dark theme */
+    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
+    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-icon: #878787;
+  }
+}
+
+#sk-container-id-1 {
+  color: var(--sklearn-color-text);
+}
+
+#sk-container-id-1 pre {
+  padding: 0;
+}
+
+#sk-container-id-1 input.sk-hidden--visually {
+  border: 0;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+#sk-container-id-1 div.sk-dashed-wrapped {
+  border: 1px dashed var(--sklearn-color-line);
+  margin: 0 0.4em 0.5em 0.4em;
+  box-sizing: border-box;
+  padding-bottom: 0.4em;
+  background-color: var(--sklearn-color-background);
+}
+
+#sk-container-id-1 div.sk-container {
+  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
+     but bootstrap.min.css set `[hidden] { display: none !important; }`
+     so we also need the `!important` here to be able to override the
+     default hidden behavior on the sphinx rendered scikit-learn.org.
+     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
+  display: inline-block !important;
+  position: relative;
+}
+
+#sk-container-id-1 div.sk-text-repr-fallback {
+  display: none;
+}
+
+div.sk-parallel-item,
+div.sk-serial,
+div.sk-item {
+  /* draw centered vertical line to link estimators */
+  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
+  background-size: 2px 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* Parallel-specific style estimator block */
+
+#sk-container-id-1 div.sk-parallel-item::after {
+  content: "";
+  width: 100%;
+  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
+  flex-grow: 1;
+}
+
+#sk-container-id-1 div.sk-parallel {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background-color: var(--sklearn-color-background);
+  position: relative;
+}
+
+#sk-container-id-1 div.sk-parallel-item {
+  display: flex;
+  flex-direction: column;
+}
+
+#sk-container-id-1 div.sk-parallel-item:first-child::after {
+  align-self: flex-end;
+  width: 50%;
+}
+
+#sk-container-id-1 div.sk-parallel-item:last-child::after {
+  align-self: flex-start;
+  width: 50%;
+}
+
+#sk-container-id-1 div.sk-parallel-item:only-child::after {
+  width: 0;
+}
+
+/* Serial-specific style estimator block */
+
+#sk-container-id-1 div.sk-serial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--sklearn-color-background);
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+
+/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
+clickable and can be expanded/collapsed.
+- Pipeline and ColumnTransformer use this feature and define the default style
+- Estimators will overwrite some part of the style using the `sk-estimator` class
+*/
+
+/* Pipeline and ColumnTransformer style (default) */
+
+#sk-container-id-1 div.sk-toggleable {
+  /* Default theme specific background. It is overwritten whether we have a
+  specific estimator or a Pipeline/ColumnTransformer */
+  background-color: var(--sklearn-color-background);
+}
+
+/* Toggleable label */
+#sk-container-id-1 label.sk-toggleable__label {
+  cursor: pointer;
+  display: flex;
+  width: 100%;
+  margin-bottom: 0;
+  padding: 0.5em;
+  box-sizing: border-box;
+  text-align: center;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+#sk-container-id-1 label.sk-toggleable__label .caption {
+  font-size: 0.6rem;
+  font-weight: lighter;
+  color: var(--sklearn-color-text-muted);
+}
+
+#sk-container-id-1 label.sk-toggleable__label-arrow:before {
+  /* Arrow on the left of the label */
+  content: "▸";
+  float: left;
+  margin-right: 0.25em;
+  color: var(--sklearn-color-icon);
+}
+
+#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {
+  color: var(--sklearn-color-text);
+}
+
+/* Toggleable content - dropdown */
+
+#sk-container-id-1 div.sk-toggleable__content {
+  max-height: 0;
+  max-width: 0;
+  overflow: hidden;
+  text-align: left;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content pre {
+  margin: 0.2em;
+  border-radius: 0.25em;
+  color: var(--sklearn-color-text);
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content.fitted pre {
+  /* unfitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {
+  /* Expand drop-down */
+  max-height: 200px;
+  max-width: 100%;
+  overflow: auto;
+}
+
+#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
+  content: "▾";
+}
+
+/* Pipeline/ColumnTransformer-specific style */
+
+#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator-specific style */
+
+/* Colorize estimator box */
+#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label label.sk-toggleable__label,
+#sk-container-id-1 div.sk-label label {
+  /* The background is the default theme color */
+  color: var(--sklearn-color-text-on-default-background);
+}
+
+/* On hover, darken the color of the background */
+#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+/* Label box, darken color on hover, fitted */
+#sk-container-id-1 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator label */
+
+#sk-container-id-1 div.sk-label label {
+  font-family: monospace;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 1.2em;
+}
+
+#sk-container-id-1 div.sk-label-container {
+  text-align: center;
+}
+
+/* Estimator-specific */
+#sk-container-id-1 div.sk-estimator {
+  font-family: monospace;
+  border: 1px dotted var(--sklearn-color-border-box);
+  border-radius: 0.25em;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+/* on hover */
+#sk-container-id-1 div.sk-estimator:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Specification for estimator info (e.g. "i" and "?") */
+
+/* Common style for "i" and "?" */
+
+.sk-estimator-doc-link,
+a:link.sk-estimator-doc-link,
+a:visited.sk-estimator-doc-link {
+  float: right;
+  font-size: smaller;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1em;
+  height: 1em;
+  width: 1em;
+  text-decoration: none !important;
+  margin-left: 0.5em;
+  text-align: center;
+  /* unfitted */
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+  color: var(--sklearn-color-unfitted-level-1);
+}
+
+.sk-estimator-doc-link.fitted,
+a:link.sk-estimator-doc-link.fitted,
+a:visited.sk-estimator-doc-link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+div.sk-estimator:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover,
+div.sk-label-container:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover,
+div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+/* Span, style for the box shown on hovering the info icon */
+.sk-estimator-doc-link span {
+  display: none;
+  z-index: 9999;
+  position: relative;
+  font-weight: normal;
+  right: .2ex;
+  padding: .5ex;
+  margin: .5ex;
+  width: min-content;
+  min-width: 20ex;
+  max-width: 50ex;
+  color: var(--sklearn-color-text);
+  box-shadow: 2pt 2pt 4pt #999;
+  /* unfitted */
+  background: var(--sklearn-color-unfitted-level-0);
+  border: .5pt solid var(--sklearn-color-unfitted-level-3);
+}
+
+.sk-estimator-doc-link.fitted span {
+  /* fitted */
+  background: var(--sklearn-color-fitted-level-0);
+  border: var(--sklearn-color-fitted-level-3);
+}
+
+.sk-estimator-doc-link:hover span {
+  display: block;
+}
+
+/* "?"-specific style due to the `<a>` HTML tag */
+
+#sk-container-id-1 a.estimator_doc_link {
+  float: right;
+  font-size: 1rem;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1rem;
+  height: 1rem;
+  width: 1rem;
+  text-decoration: none;
+  /* unfitted */
+  color: var(--sklearn-color-unfitted-level-1);
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+#sk-container-id-1 a.estimator_doc_link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+}
+</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[(&#x27;iterativeimputer&#x27;, IterativeImputer(random_state=42)),
+                (&#x27;standardscaler&#x27;, StandardScaler()),
+                (&#x27;xgbclassifier&#x27;,
+                 XGBClassifier(base_score=None, booster=None, callbacks=None,
+                               colsample_bylevel=None, colsample_bynode=None,
+                               colsample_bytree=None, device=None,
+                               early_stopping_rounds=None,
+                               enable_categorical=False, eval_metric=&#x27;logloss&#x27;,
+                               feature_types=N...ow_policy=None,
+                               importance_type=None,
+                               interaction_constraints=None, learning_rate=None,
+                               max_bin=None, max_cat_threshold=None,
+                               max_cat_to_onehot=None, max_delta_step=None,
+                               max_depth=None, max_leaves=None,
+                               min_child_weight=None, missing=nan,
+                               monotone_constraints=None, multi_strategy=None,
+                               n_estimators=None, n_jobs=None,
+                               num_parallel_tree=None, random_state=42, ...))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" ><label for="sk-estimator-id-1" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>Pipeline</div></div><div><a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.6/modules/generated/sklearn.pipeline.Pipeline.html">?<span>Documentation for Pipeline</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></div></label><div class="sk-toggleable__content fitted"><pre>Pipeline(steps=[(&#x27;iterativeimputer&#x27;, IterativeImputer(random_state=42)),
+                (&#x27;standardscaler&#x27;, StandardScaler()),
+                (&#x27;xgbclassifier&#x27;,
+                 XGBClassifier(base_score=None, booster=None, callbacks=None,
+                               colsample_bylevel=None, colsample_bynode=None,
+                               colsample_bytree=None, device=None,
+                               early_stopping_rounds=None,
+                               enable_categorical=False, eval_metric=&#x27;logloss&#x27;,
+                               feature_types=N...ow_policy=None,
+                               importance_type=None,
+                               interaction_constraints=None, learning_rate=None,
+                               max_bin=None, max_cat_threshold=None,
+                               max_cat_to_onehot=None, max_delta_step=None,
+                               max_depth=None, max_leaves=None,
+                               min_child_weight=None, missing=nan,
+                               monotone_constraints=None, multi_strategy=None,
+                               n_estimators=None, n_jobs=None,
+                               num_parallel_tree=None, random_state=42, ...))])</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-2" type="checkbox" ><label for="sk-estimator-id-2" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>IterativeImputer</div></div><div><a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.6/modules/generated/sklearn.impute.IterativeImputer.html">?<span>Documentation for IterativeImputer</span></a></div></label><div class="sk-toggleable__content fitted"><pre>IterativeImputer(random_state=42)</pre></div> </div></div><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-3" type="checkbox" ><label for="sk-estimator-id-3" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>StandardScaler</div></div><div><a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.6/modules/generated/sklearn.preprocessing.StandardScaler.html">?<span>Documentation for StandardScaler</span></a></div></label><div class="sk-toggleable__content fitted"><pre>StandardScaler()</pre></div> </div></div><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-4" type="checkbox" ><label for="sk-estimator-id-4" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>XGBClassifier</div></div></label><div class="sk-toggleable__content fitted"><pre>XGBClassifier(base_score=None, booster=None, callbacks=None,
+              colsample_bylevel=None, colsample_bynode=None,
+              colsample_bytree=None, device=None, early_stopping_rounds=None,
+              enable_categorical=False, eval_metric=&#x27;logloss&#x27;,
+              feature_types=None, gamma=None, grow_policy=None,
+              importance_type=None, interaction_constraints=None,
+              learning_rate=None, max_bin=None, max_cat_threshold=None,
+              max_cat_to_onehot=None, max_delta_step=None, max_depth=None,
+              max_leaves=None, min_child_weight=None, missing=nan,
+              monotone_constraints=None, multi_strategy=None, n_estimators=None,
+              n_jobs=None, num_parallel_tree=None, random_state=42, ...)</pre></div> </div></div></div></div></div></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">modelos</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Logistic Regression&quot;</span><span class="p">:</span> <span class="n">pipeline_lr</span><span class="p">,</span>
+    <span class="s2">&quot;Random Forest&quot;</span><span class="p">:</span> <span class="n">pipeline_rf</span><span class="p">,</span>
+    <span class="s2">&quot;XGBoost&quot;</span><span class="p">:</span> <span class="n">pipeline_xgb</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mejor_modelo_nombre</span> <span class="o">=</span> <span class="n">df_comparacion</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Modelo&#39;</span><span class="p">]</span>
+<span class="n">mejor_pipeline</span> <span class="o">=</span> <span class="n">modelos</span><span class="p">[</span><span class="n">mejor_modelo_nombre</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_pred_proba_test</span> <span class="o">=</span> <span class="n">mejor_pipeline</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_proba_test</span><span class="p">)</span>
+<span class="n">roc_auc</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_proba_test</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkblue&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;ROC AUC = </span><span class="si">{</span><span class="n">roc_auc</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;r--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Azar (0.5)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Tasa de Falsos Positivos (FPR)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Tasa de Verdaderos Positivos (TPR)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Curva ROC — </span><span class="si">{</span><span class="n">mejor_modelo_nombre</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/28fc418ec22392c6b7fb970fdee2d0be2dde2f315193f54eb18a8a445ab3f16a.png" src="_images/28fc418ec22392c6b7fb970fdee2d0be2dde2f315193f54eb18a8a445ab3f16a.png" />
+</div>
+</div>
+<p>Interpretación</p>
+<p>La curva ROC del modelo Random Forest muestra la capacidad del modelo para diferenciar entre las clases a través de distintos umbrales de clasificación. La línea azul se encuentra por encima de la línea diagonal roja, lo que indica que el modelo tiene un desempeño mejor que el azar. El valor de AUC = 0.6869 refleja una capacidad de discriminación moderada, es decir, el modelo logra identificar una proporción importante de verdaderos positivos manteniendo un equilibrio razonable con los falsos positivos a lo largo de los diferentes umbrales evaluados.</p>
+<p>11.2 Matriz de Confusión</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_pred_test</span> <span class="o">=</span> <span class="n">mejor_pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_test</span><span class="p">)</span>
+
+<span class="n">disp</span> <span class="o">=</span> <span class="n">ConfusionMatrixDisplay</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">display_labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;No Potable&#39;</span><span class="p">,</span> <span class="s1">&#39;Potable&#39;</span><span class="p">])</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">disp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Matriz de Confusión — </span><span class="si">{</span><span class="n">mejor_modelo_nombre</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/0f7f04968d5e045bfd519d5d725af5871562657913a31701514d63aebeb888ea.png" src="_images/0f7f04968d5e045bfd519d5d725af5871562657913a31701514d63aebeb888ea.png" />
+</div>
+</div>
+<p>Interpretación</p>
+<p>Esta matriz de confusión muestra el desempeño del modelo Random Forest para clasificar la potabilidad del agua. De los casos realmente “No Potable”, 369 fueron clasificados correctamente y 43 se confundieron como “Potable”, lo que indica un buen desempeño en esta clase. En cambio, para los casos realmente “Potable”, el modelo solo acertó 86, mientras que 158 fueron clasificados incorrectamente como “No Potable”, lo que evidencia dificultad para detectar el agua potable. En general, el modelo tiende a predecir mejor la clase “No Potable” que la “Potable”, mostrando un sesgo hacia la primera clase y una capacidad limitada para identificar correctamente los casos positivos de potabilidad.</p>
+<p>11.3 Importancia de Variables (RF / XGBoost)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">mejor_modelo_nombre</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Random Forest&#39;</span><span class="p">,</span> <span class="s1">&#39;XGBoost&#39;</span><span class="p">]:</span>
+    <span class="n">step_name</span> <span class="o">=</span> <span class="s1">&#39;randomforestclassifier&#39;</span> <span class="k">if</span> <span class="n">mejor_modelo_nombre</span> <span class="o">==</span> <span class="s1">&#39;Random Forest&#39;</span> <span class="k">else</span> <span class="s1">&#39;xgbclassifier&#39;</span>
+    <span class="n">modelo_interno</span> <span class="o">=</span> <span class="n">mejor_pipeline</span><span class="o">.</span><span class="n">named_steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span>
+    <span class="n">importancias</span> <span class="o">=</span> <span class="n">modelo_interno</span><span class="o">.</span><span class="n">feature_importances_</span>
+
+    <span class="n">df_imp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Variable&#39;</span><span class="p">:</span> <span class="n">col_numericas</span><span class="p">,</span> <span class="s1">&#39;Importancia&#39;</span><span class="p">:</span> <span class="n">importancias</span><span class="p">})</span>
+    <span class="n">df_imp</span> <span class="o">=</span> <span class="n">df_imp</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;Importancia&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Importancia&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Variable&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df_imp</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Importancia de Variables — </span><span class="si">{</span><span class="n">mejor_modelo_nombre</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="n">display</span><span class="p">(</span><span class="n">df_imp</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;La importancia de variables solo está disponible para Random Forest y XGBoost.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/c0208e8e885e38eaaa41c6d251b22d0fc802a50d896b5d1e8cd83765f99beb11.png" src="_images/c0208e8e885e38eaaa41c6d251b22d0fc802a50d896b5d1e8cd83765f99beb11.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Variable</th>
+      <th>Importancia</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>Sulfate</td>
+      <td>0.138388</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>ph</td>
+      <td>0.128584</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hardness</td>
+      <td>0.116706</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Chloramines</td>
+      <td>0.112641</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Solids</td>
+      <td>0.110522</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Conductivity</td>
+      <td>0.100829</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Organic_carbon</td>
+      <td>0.099839</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Trihalomethanes</td>
+      <td>0.096734</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Turbidity</td>
+      <td>0.095757</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Interpretación</p>
+<p>El gráfico de importancia de variables del modelo Random Forest revela que el Sulfate es el factor más determinante para la predicción (con un valor cercano a 0.14), seguido estrechamente por el pH y la Hardness, lo que indica que las propiedades químicas del agua tienen mayor peso predictivo que las físicas. Aunque existe una jerarquía descendente donde la Turbidity y los Trihalomethanes aportan menos relevancia relativa (alrededor de 0.095), la diferencia entre la variable más y menos importante no es extrema, sugiriendo que todas las características analizadas contribuyen significativamente al funcionamiento del modelo, pero son los componentes químicos los que dominan la toma de decisiones algorítmica.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="optimizacion-de-umbrales-de-decision">
+<h1>12. Optimización de Umbrales de Decisión<a class="headerlink" href="#optimizacion-de-umbrales-de-decision" title="Permalink to this heading">#</a></h1>
+<p>El umbral por defecto es <strong>0.5</strong>, pero podemos ajustarlo según el contexto:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Método</p></th>
+<th class="head"><p>Objetivo</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Youden</strong></p></td>
+<td><p>Balance matemático óptimo (TPR − FPR máximo)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Riesgo</strong></p></td>
+<td><p>Minimiza falsos positivos (FPR ≤ 5%)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Financiero</strong></p></td>
+<td><p>Maximiza utilidad neta basada en costes reales</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">confusion_matrix</span>
+
+<span class="c1"># Asume y_pred_proba_test, fpr, tpr, thresholds del capítulo anterior</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="umbral-de-youden">
+<h2>12.1 Umbral de Youden<a class="headerlink" href="#umbral-de-youden" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">j_scores</span> <span class="o">=</span> <span class="n">tpr</span> <span class="o">-</span> <span class="n">fpr</span>
+<span class="n">best_idx_youden</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">j_scores</span><span class="p">)</span>
+<span class="n">umbral_youden</span> <span class="o">=</span> <span class="n">thresholds</span><span class="p">[</span><span class="n">best_idx_youden</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Umbral Youden: </span><span class="si">{</span><span class="n">umbral_youden</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  TPR: </span><span class="si">{</span><span class="n">tpr</span><span class="p">[</span><span class="n">best_idx_youden</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1"> | FPR: </span><span class="si">{</span><span class="n">fpr</span><span class="p">[</span><span class="n">best_idx_youden</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Umbral Youden: 0.4000
+  TPR: 0.6107 | FPR: 0.3617
+</pre></div>
+</div>
+</div>
+</div>
+<p>12.2 Umbral de Riesgo (FPR ≤ 5%)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fpr_limit_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">fpr</span> <span class="o">&lt;=</span> <span class="mf">0.05</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">umbral_riesgo</span> <span class="o">=</span> <span class="n">thresholds</span><span class="p">[</span><span class="n">fpr_limit_idx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fpr_limit_idx</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.5</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Umbral Riesgo: </span><span class="si">{</span><span class="n">umbral_riesgo</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Umbral Riesgo: 0.5800
+</pre></div>
+</div>
+</div>
+</div>
+<p>12.3 Umbral Financiero</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ganancia_vp</span> <span class="o">=</span> <span class="mi">100</span>    <span class="c1"># Ganancia por clasificar correctamente agua potable</span>
+<span class="n">perdida_fp</span>  <span class="o">=</span> <span class="o">-</span><span class="mi">200</span>   <span class="c1"># Pérdida por distribuir agua no potable como potable</span>
+
+<span class="n">utilidades</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">thresholds</span><span class="p">:</span>
+    <span class="n">preds_temp</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_pred_proba_test</span> <span class="o">&gt;=</span> <span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">preds_temp</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">utilidades</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">tp</span> <span class="o">*</span> <span class="n">ganancia_vp</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">fp</span> <span class="o">*</span> <span class="n">perdida_fp</span><span class="p">))</span>
+
+<span class="n">umbral_financiero</span> <span class="o">=</span> <span class="n">thresholds</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">utilidades</span><span class="p">)]</span>
+<span class="n">max_utilidad</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">utilidades</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Umbral Financiero: </span><span class="si">{</span><span class="n">umbral_financiero</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Utilidad neta máxima: $</span><span class="si">{</span><span class="n">max_utilidad</span><span class="si">:</span><span class="s1">,.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Umbral Financiero: 0.6300
+Utilidad neta máxima: $2,200.00
+</pre></div>
+</div>
+</div>
+</div>
+<p>12.4 Resumen de Umbrales</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">df_umbrales</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span><span class="s1">&#39;Método&#39;</span><span class="p">:</span> <span class="s1">&#39;Youden&#39;</span><span class="p">,</span>      <span class="s1">&#39;Umbral&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">umbral_youden</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>     <span class="s1">&#39;Uso recomendado&#39;</span><span class="p">:</span> <span class="s1">&#39;Balance general&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;Método&#39;</span><span class="p">:</span> <span class="s1">&#39;Riesgo&#39;</span><span class="p">,</span>      <span class="s1">&#39;Umbral&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">umbral_riesgo</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>     <span class="s1">&#39;Uso recomendado&#39;</span><span class="p">:</span> <span class="s1">&#39;Control estricto FP&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;Método&#39;</span><span class="p">:</span> <span class="s1">&#39;Financiero&#39;</span><span class="p">,</span>  <span class="s1">&#39;Umbral&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">umbral_financiero</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s1">&#39;Uso recomendado&#39;</span><span class="p">:</span> <span class="s1">&#39;Maximizar utilidad neta&#39;</span><span class="p">},</span>
+<span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">55</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=== RESUMEN DE UMBRALES ÓPTIMOS ===&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">55</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_umbrales</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=======================================================
+=== RESUMEN DE UMBRALES ÓPTIMOS ===
+=======================================================
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Método</th>
+      <th>Umbral</th>
+      <th>Uso recomendado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Youden</td>
+      <td>0.40</td>
+      <td>Balance general</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Riesgo</td>
+      <td>0.58</td>
+      <td>Control estricto FP</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Financiero</td>
+      <td>0.63</td>
+      <td>Maximizar utilidad neta</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="empaquetado-y-despliegue-del-modelo">
+<h1>13. Empaquetado y Despliegue del Modelo<a class="headerlink" href="#empaquetado-y-despliegue-del-modelo" title="Permalink to this heading">#</a></h1>
+<p>Guardamos el pipeline completo con <code class="docutils literal notranslate"><span class="pre">joblib</span></code> y los metadatos necesarios
+para integrarlo en la app Dash.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;../model&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Guardar el pipeline completo</span>
+<span class="n">nombre_archivo</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;../model/mejor_modelo_</span><span class="si">{</span><span class="n">mejor_modelo_nombre</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">_water.joblib&#39;</span>
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">mejor_pipeline</span><span class="p">,</span> <span class="n">nombre_archivo</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Guardar metadatos</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;mejor_modelo&#39;</span><span class="p">:</span> <span class="n">mejor_modelo_nombre</span><span class="p">,</span>
+    <span class="s1">&#39;umbral_youden&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">umbral_youden</span><span class="p">),</span>
+    <span class="s1">&#39;umbral_financiero&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">umbral_financiero</span><span class="p">),</span>
+    <span class="s1">&#39;columnas&#39;</span><span class="p">:</span> <span class="n">col_numericas</span><span class="p">,</span>
+    <span class="s1">&#39;roc_auc_test&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_proba_test</span><span class="p">))</span>
+<span class="p">}</span>
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="s1">&#39;../model/metadata_modelo.joblib&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">55</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39; MODELO EMPAQUETADO CON ÉXITO&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">55</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; Modelo:    </span><span class="si">{</span><span class="n">nombre_archivo</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; Metadata:  ../model/metadata_modelo.joblib&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; Modelo:    </span><span class="si">{</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;mejor_modelo&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; ROC AUC:   </span><span class="si">{</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;roc_auc_test&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=======================================================
+ MODELO EMPAQUETADO CON ÉXITO
+=======================================================
+ Modelo:    ../model/mejor_modelo_random_forest_water.joblib
+ Metadata:  ../model/metadata_modelo.joblib
+ Modelo:    Random Forest
+ ROC AUC:   0.6869
+</pre></div>
+</div>
+</div>
+</div>
+<p>13.1 Verificar archivos guardados</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">archivos_model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">&#39;../model&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;📁 Archivos en /model:&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">archivos_model</span><span class="p">:</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;../model/</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1024</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s1">  (</span><span class="si">{</span><span class="n">size</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> KB)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>📁 Archivos en /model:
+  app.py  (3.8 KB)
+  mejor_modelo_random_forest_water.joblib  (1493.5 KB)
+  metadata_modelo.joblib  (0.2 KB)
+</pre></div>
+</div>
+</div>
+</div>
+<p>13.2 Cargar y validar el modelo guardado</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Carga y predicción de prueba</span>
+<span class="n">meta</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;../model/metadata_modelo.joblib&#39;</span><span class="p">)</span>
+<span class="n">modelo_cargado</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">nombre_archivo</span><span class="p">)</span>
+
+<span class="n">muestra</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="n">prob</span> <span class="o">=</span> <span class="n">modelo_cargado</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">muestra</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">decision</span> <span class="o">=</span> <span class="s1">&#39;POTABLE ✅&#39;</span> <span class="k">if</span> <span class="n">prob</span> <span class="o">&gt;=</span> <span class="n">meta</span><span class="p">[</span><span class="s1">&#39;umbral_youden&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;NO POTABLE ❌&#39;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Probabilidad potabilidad: </span><span class="si">{</span><span class="n">prob</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Umbral Youden aplicado: </span><span class="si">{</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;umbral_youden&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Clasificación: </span><span class="si">{</span><span class="n">decision</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Probabilidad potabilidad: 0.3600
+Umbral Youden aplicado: 0.4000
+Clasificación: NO POTABLE ❌
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="prediccion-de-potabilidad-del-agua-con-machine-learning">
+<h1>14. Predicción de Potabilidad del Agua con Machine Learning<a class="headerlink" href="#prediccion-de-potabilidad-del-agua-con-machine-learning" title="Permalink to this heading">#</a></h1>
+<section id="modulo-de-clasificacion-busqueda-del-mejor-modelo">
+<h2>Módulo de Clasificación - Búsqueda del Mejor Modelo<a class="headerlink" href="#modulo-de-clasificacion-busqueda-del-mejor-modelo" title="Permalink to this heading">#</a></h2>
+<p><strong>Objetivo:</strong> Construir un modelo de clasificación binaria que determine si una muestra de agua es potable (<code class="docutils literal notranslate"><span class="pre">1</span></code>) o no (<code class="docutils literal notranslate"><span class="pre">0</span></code>) basándose en 9 parámetros químicos y físicos.</p>
+<p><strong>Metodología:</strong></p>
+<ol class="arabic simple">
+<li><p>Análisis Exploratorio de Datos (EDA)</p></li>
+<li><p>Preprocesamiento robusto (IterativeImputer MICE + StandardScaler)</p></li>
+<li><p>Análisis de multicolinealidad (VIF)</p></li>
+<li><p>Entrenamiento de 5 modelos con GridSearchCV + Validación Cruzada (K=5)</p></li>
+<li><p>Selección del mejor modelo por ROC AUC</p></li>
+<li><p>Análisis de umbrales óptimos (Youden, Riesgo, Financiero)</p></li>
+<li><p>Empaquetado del modelo con joblib</p></li>
+<li><p>Despliegue en Dash de Streamlit</p></li>
+</ol>
+<p>14.1 Dash de Streamlit
+Generamos automáticamente el archivo <code class="docutils literal notranslate"><span class="pre">app.py</span></code> con una interfaz web interactiva.
+Para ejecutarla:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>streamlit
+streamlit<span class="w"> </span>run<span class="w"> </span>../model/app.py
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">app_code</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">import streamlit as st</span>
+<span class="s1">import joblib</span>
+<span class="s1">import numpy as np</span>
+<span class="s1">import pandas as pd</span>
+<span class="s1">import os</span>
+
+<span class="s1"># Configuración de la página</span>
+<span class="s1">st.set_page_config(</span>
+<span class="s1">    page_title=&quot;Potabilidad del Agua&quot;,</span>
+<span class="s1">    page_icon=&quot;💧&quot;,</span>
+<span class="s1">    layout=&quot;wide&quot;</span>
+<span class="s1">)</span>
+
+<span class="s1">st.title(&quot;💧 Predicción de Potabilidad del Agua&quot;)</span>
+<span class="s1">st.markdown(&quot;&quot;&quot;</span>
+<span class="s1">Sistema de clasificación basado en Machine Learning que determina si una muestra</span>
+<span class="s1">de agua es **potable (1)** o **no potable (0)** según 9 parámetros químicos y físicos.</span>
+<span class="s1">&quot;&quot;&quot;)</span>
+
+<span class="s1"># Cargar modelo y metadata</span>
+<span class="s1">@st.cache_resource</span>
+<span class="s1">def cargar_modelo():</span>
+<span class="s1">    modelo = joblib.load(&#39;mejor_modelo_</span><span class="si">{}</span><span class="s1">_water.joblib&#39;.format(</span>
+<span class="s1">        &#39;</span><span class="si">{}</span><span class="s1">&#39;.replace(&#39; &#39;, &#39;_&#39;)  # placeholder, se reemplaza abajo</span>
+<span class="s1">    ))</span>
+<span class="s1">    return modelo</span>
+
+<span class="s1">@st.cache_resource</span>
+<span class="s1">def cargar_metadata():</span>
+<span class="s1">    return joblib.load(&#39;metadata_modelo.joblib&#39;)</span>
+
+<span class="s1">try:</span>
+<span class="s1">    meta = cargar_metadata()</span>
+<span class="s1">    modelo = cargar_modelo()</span>
+<span class="s1">    st.success(f&quot;✅ Modelo cargado: **</span><span class="si">{meta[&#39;mejor_modelo&#39;]}</span><span class="s1">** (ROC AUC: </span><span class="si">{meta[&#39;roc_auc_test&#39;]:.4f}</span><span class="s1">)&quot;)</span>
+<span class="s1">except Exception as e:</span>
+<span class="s1">    st.error(f&quot;Error al cargar el modelo: </span><span class="si">{e}</span><span class="s1">&quot;)</span>
+<span class="s1">    st.stop()</span>
+
+<span class="s1"># Sidebar con información</span>
+<span class="s1">st.sidebar.header(&quot; Información&quot;)</span>
+<span class="s1">st.sidebar.markdown(f&quot;&quot;&quot;</span>
+<span class="s1">- **Modelo:** </span><span class="si">{meta[&#39;mejor_modelo&#39;]}</span>
+<span class="s1">- **ROC AUC:** </span><span class="si">{meta[&#39;roc_auc_test&#39;]:.4f}</span>
+<span class="s1">- **Umbral Youden:** </span><span class="si">{meta[&#39;umbral_youden&#39;]:.4f}</span>
+<span class="s1">- **Umbral Financiero:** </span><span class="si">{meta[&#39;umbral_financiero&#39;]:.4f}</span>
+<span class="s1">&quot;&quot;&quot;)</span>
+
+<span class="s1">st.sidebar.markdown(&quot;---&quot;)</span>
+<span class="s1">umbral_seleccionado = st.sidebar.selectbox(</span>
+<span class="s1">    &quot;Seleccionar umbral de decisión&quot;,</span>
+<span class="s1">    [&quot;Youden (balance)&quot;, &quot;Financiero (utilidad)&quot;, &quot;0.5 (por defecto)&quot;],</span>
+<span class="s1">    index=0</span>
+<span class="s1">)</span>
+
+<span class="s1">if umbral_seleccionado == &quot;Youden (balance)&quot;:</span>
+<span class="s1">    umbral = meta[&#39;umbral_youden&#39;]</span>
+<span class="s1">elif umbral_seleccionado == &quot;Financiero (utilidad)&quot;:</span>
+<span class="s1">    umbral = meta[&#39;umbral_financiero&#39;]</span>
+<span class="s1">else:</span>
+<span class="s1">    umbral = 0.5</span>
+
+<span class="s1">st.sidebar.info(f&quot;Umbral activo: **</span><span class="si">{umbral:.4f}</span><span class="s1">**&quot;)</span>
+
+<span class="s1"># Formulario de entrada</span>
+<span class="s1">st.header(&quot; Ingrese los parámetros de la muestra&quot;)</span>
+
+<span class="s1">col1, col2, col3 = st.columns(3)</span>
+
+<span class="s1">with col1:</span>
+<span class="s1">    ph = st.number_input(&quot;pH&quot;, min_value=0.0, max_value=14.0, value=7.0, step=0.1)</span>
+<span class="s1">    hardness = st.number_input(&quot;Hardness (mg/L)&quot;, min_value=0.0, value=200.0, step=10.0)</span>
+<span class="s1">    solids = st.number_input(&quot;Solids (ppm)&quot;, min_value=0.0, value=20000.0, step=1000.0)</span>
+
+<span class="s1">with col2:</span>
+<span class="s1">    chloramines = st.number_input(&quot;Chloramines (ppm)&quot;, min_value=0.0, value=7.0, step=0.5)</span>
+<span class="s1">    sulfate = st.number_input(&quot;Sulfate (mg/L)&quot;, min_value=0.0, value=250.0, step=10.0)</span>
+<span class="s1">    conductivity = st.number_input(&quot;Conductivity (μS/cm)&quot;, min_value=0.0, value=400.0, step=10.0)</span>
+
+<span class="s1">with col3:</span>
+<span class="s1">    organic_carbon = st.number_input(&quot;Organic Carbon (ppm)&quot;, min_value=0.0, value=15.0, step=1.0)</span>
+<span class="s1">    trihalomethanes = st.number_input(&quot;Trihalomethanes (μg/L)&quot;, min_value=0.0, value=70.0, step=5.0)</span>
+<span class="s1">    turbidity = st.number_input(&quot;Turbidity (NTU)&quot;, min_value=0.0, value=5.0, step=0.5)</span>
+
+<span class="s1"># Botón de predicción</span>
+<span class="s1">if st.button(&quot; Predecir Potabilidad&quot;, type=&quot;primary&quot;, use_container_width=True):</span>
+<span class="s1">    datos = pd.DataFrame([{</span>
+<span class="s1">        &#39;ph&#39;: ph,</span>
+<span class="s1">        &#39;Hardness&#39;: hardness,</span>
+<span class="s1">        &#39;Solids&#39;: solids,</span>
+<span class="s1">        &#39;Chloramines&#39;: chloramines,</span>
+<span class="s1">        &#39;Sulfate&#39;: sulfate,</span>
+<span class="s1">        &#39;Conductivity&#39;: conductivity,</span>
+<span class="s1">        &#39;Organic_carbon&#39;: organic_carbon,</span>
+<span class="s1">        &#39;Trihalomethanes&#39;: trihalomethanes,</span>
+<span class="s1">        &#39;Turbidity&#39;: turbidity</span>
+<span class="s1">    }])</span>
+
+<span class="s1">    prob = modelo.predict_proba(datos)[0, 1]</span>
+<span class="s1">    decision = prob &gt;= umbral</span>
+
+<span class="s1">    st.markdown(&quot;---&quot;)</span>
+<span class="s1">    st.subheader(&quot; Resultado de la Predicción&quot;)</span>
+
+<span class="s1">    col_a, col_b, col_c = st.columns(3)</span>
+
+<span class="s1">    with col_a:</span>
+<span class="s1">        st.metric(&quot;Probabilidad de ser Potable&quot;, f&quot;</span><span class="si">{prob:.2%}</span><span class="s1">&quot;)</span>
+
+<span class="s1">    with col_b:</span>
+<span class="s1">        st.metric(&quot;Umbral Aplicado&quot;, f&quot;</span><span class="si">{umbral:.4f}</span><span class="s1">&quot;)</span>
+
+<span class="s1">    with col_c:</span>
+<span class="s1">        if decision:</span>
+<span class="s1">            st.success(&quot; AGUA POTABLE ✅&quot;)</span>
+<span class="s1">        else:</span>
+<span class="s1">            st.error(&quot;⚠️ AGUA NO POTABLE ❌&quot;)</span>
+
+<span class="s1">    # Barra de progreso visual</span>
+<span class="s1">    st.progress(float(prob))</span>
+<span class="s1">&#39;&#39;&#39;</span>
+
+<span class="c1"># Reemplazar el nombre del modelo en el código</span>
+<span class="n">app_code</span> <span class="o">=</span> <span class="n">app_code</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">mejor_modelo_nombre</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Guardar el archivo</span>
+<span class="n">ruta_app</span> <span class="o">=</span> <span class="s1">&#39;../model/app.py&#39;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ruta_app</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">app_code</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39; APP STREAMLIT GENERADA CON ÉXITO&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; Archivo: </span><span class="si">{</span><span class="n">ruta_app</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; Para ejecutar:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;   cd ../model&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;   streamlit run app.py&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>============================================================
+ APP STREAMLIT GENERADA CON ÉXITO
+============================================================
+ Archivo: ../model/app.py
+ Para ejecutar:
+   cd ../model
+   streamlit run app.py
+============================================================
+</pre></div>
+</div>
+</div>
+</div>
+<p>14.2 Fin del Análisis Completo</p>
+<p>Has completado el flujo completo de Machine Learning:</p>
+<ol class="arabic simple">
+<li><p>Exploración y comprensión de los datos</p></li>
+<li><p>Preprocesamiento (imputación MICE + VIF + escalado)</p></li>
+<li><p>Entrenamiento de 5 modelos con GridSearchCV</p></li>
+<li><p>Evaluación y comparación de resultados</p></li>
+<li><p>Análisis profundo del modelo ganador</p></li>
+<li><p>Optimización de umbrales de decisión</p></li>
+<li><p>Empaquetado del modelo con joblib</p></li>
+<li><p>Generación de app Streamlit interactiva</p></li>
+</ol>
+<p><strong>Próximos pasos:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>streamlit
+<span class="nb">cd</span><span class="w"> </span>../model
+streamlit<span class="w"> </span>run<span class="w"> </span>app.py
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="07_Tratamiento_de_datos_faltantes.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">7. Tratamiento de Datos Faltantes</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">8. Preprocesamiento de Datos</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#entrenamiento-de-modelos">9. Entrenamiento de Modelos</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluacion-y-comparacion-de-modelos">10. Evaluación y Comparación de Modelos</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-profundo-del-mejor-modelo">11 Análisis Profundo del Mejor Modelo</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizacion-de-umbrales-de-decision">12. Optimización de Umbrales de Decisión</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#umbral-de-youden">12.1 Umbral de Youden</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#empaquetado-y-despliegue-del-modelo">13. Empaquetado y Despliegue del Modelo</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#prediccion-de-potabilidad-del-agua-con-machine-learning">14. Predicción de Potabilidad del Agua con Machine Learning</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modulo-de-clasificacion-busqueda-del-mejor-modelo">Módulo de Clasificación - Búsqueda del Mejor Modelo</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Maria May, Andrea Padilla, Alberto Jimenez, Winston Pardo
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

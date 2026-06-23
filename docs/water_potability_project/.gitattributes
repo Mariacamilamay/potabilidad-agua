@@ -1,8 +1,0 @@
-# Auto detect text files and perform LF normalization
-* text=auto
-
-# Data files
-*.csv text eol=lf
-*.webp binary
-*.pyc binary
-__pycache__/ binary

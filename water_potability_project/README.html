@@ -1,0 +1,882 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>🌊 Predicción de la Potabilidad del Agua &#8212; Predicción de la Potabilidad del Agua</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'water_potability_project/README';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Predicción de la Potabilidad del Agua</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Bienvenido a tu Libro de Jupyter
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../01_introduccion.html">1. Introducción</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_planteamiento_del_problema.html">2 Planteamiento del Problema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_Objetivos.html">3 Objetivos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_Justificacion.html">4 Justificación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_marco_teorico.html">5 Marco teorico</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_Analisis_exploratorio_de_datos.html">6. Analisis Exploratorio de Datos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07_Tratamiento_de_datos_faltantes.html">7. Tratamiento de Datos Faltantes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08_Machine_Learning.html">8. Preprocesamiento de Datos</a></li>
+
+
+
+
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fwater_potability_project/README.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/water_potability_project/README.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>🌊 Predicción de la Potabilidad del Agua</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-de-contenidos">📋 Tabla de Contenidos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#descripcion">🎯 Descripción</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contexto-del-problema">Contexto del Problema</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#caracteristicas">✨ Características</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tecnologias-utilizadas">🛠️ Tecnologías Utilizadas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estructura-del-proyecto">📁 Estructura del Proyecto</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instalacion-y-ejecucion">🚀 Instalación y Ejecución</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-previos">0. Requisitos Previos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clonar-el-repositorio">1. Clonar el Repositorio</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#crear-entorno-virtual-recomendado">2. Crear Entorno Virtual (Recomendado)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#opcion-a-con-conda">Opción A: Con Conda</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#opcion-b-con-venv">Opción B: Con venv</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instalar-dependencias">3. Instalar Dependencias</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preparar-el-dataset">4. Preparar el Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejecutar-la-aplicacion">5. Ejecutar la Aplicación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#acceder-al-dashboard">6. Acceder al Dashboard</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-del-dashboard">📖 Uso del Dashboard</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#navegacion">Navegación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seccion-eda">Sección EDA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#controles-interactivos">Controles Interactivos</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset">📊 Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Descripción</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fuente">Fuente</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contribuciones">🤝 Contribuciones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#licencia">📄 Licencia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autores">👥 Autores</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="prediccion-de-la-potabilidad-del-agua">
+<h1>🌊 Predicción de la Potabilidad del Agua<a class="headerlink" href="#prediccion-de-la-potabilidad-del-agua" title="Permalink to this heading">#</a></h1>
+<p>Dashboard interactivo para el análisis exploratorio de datos (EDA) y predicción de la potabilidad del agua utilizando técnicas de Machine Learning y visualizaciones interactivas con Dash y Plotly.</p>
+<p><img alt="Python" src="https://img.shields.io/badge/Python-3.10+-blue.svg" />
+<img alt="Dash" src="https://img.shields.io/badge/Dash-2.18.1-green.svg" />
+<img alt="Plotly" src="https://img.shields.io/badge/Plotly-5.24.1-orange.svg" />
+<img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></p>
+<section id="tabla-de-contenidos">
+<h2>📋 Tabla de Contenidos<a class="headerlink" href="#tabla-de-contenidos" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="xref myst">Descripción</span></p></li>
+<li><p><span class="xref myst">Características</span></p></li>
+<li><p><span class="xref myst">Tecnologías Utilizadas</span></p></li>
+<li><p><span class="xref myst">Estructura del Proyecto</span></p></li>
+<li><p><span class="xref myst">Instalación y Ejecución</span></p></li>
+<li><p><span class="xref myst">Uso del Dashboard</span></p></li>
+<li><p><span class="xref myst">Dataset</span></p></li>
+<li><p><span class="xref myst">Autores</span></p></li>
+<li><p><span class="xref myst">Licencia</span></p></li>
+</ul>
+</section>
+<section id="descripcion">
+<h2>🎯 Descripción<a class="headerlink" href="#descripcion" title="Permalink to this heading">#</a></h2>
+<p>Este proyecto aborda el problema de la potabilidad del agua mediante un enfoque de ciencia de datos. Se desarrolla un dashboard interactivo que permite:</p>
+<ol class="arabic simple">
+<li><p><strong>Análisis Exploratorio de Datos (EDA)</strong>: Visualización completa de las características fisicoquímicas del agua</p></li>
+<li><p><strong>Estadísticas Descriptivas</strong>: Resumen detallado de todas las variables</p></li>
+<li><p><strong>Análisis de Correlación</strong>: Identificación de relaciones entre variables</p></li>
+<li><p><strong>Visualizaciones Interactivas</strong>: Gráficos personalizables para explorar los datos</p></li>
+<li><p><strong>Predicción</strong>: Modelos de Machine Learning para clasificar la potabilidad del agua</p></li>
+</ol>
+<section id="contexto-del-problema">
+<h3>Contexto del Problema<a class="headerlink" href="#contexto-del-problema" title="Permalink to this heading">#</a></h3>
+<p>La calidad del agua es un aspecto fundamental para la salud humana. El consumo de agua contaminada puede generar diversas enfermedades y afectar significativamente la calidad de vida de la población. Este proyecto busca responder a la pregunta:</p>
+<blockquote>
+<div><p><strong>¿Es posible predecir la potabilidad del agua a partir de sus características fisicoquímicas mediante el uso de modelos de aprendizaje automático?</strong></p>
+</div></blockquote>
+</section>
+</section>
+<section id="caracteristicas">
+<h2>✨ Características<a class="headerlink" href="#caracteristicas" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>📊 <strong>Dashboard Interactivo</strong>: Interfaz moderna y responsiva con Bootstrap</p></li>
+<li><p>🎨 <strong>Visualizaciones Dinámicas</strong>: Gráficos interactivos con Plotly</p></li>
+<li><p>📈 <strong>Análisis Estadístico Completo</strong>: Estadísticas descriptivas y correlaciones</p></li>
+<li><p>🔍 <strong>Filtros Personalizables</strong>: Explora los datos según tus intereses</p></li>
+<li><p>📱 <strong>Diseño Responsivo</strong>: Funciona en dispositivos móviles y desktop</p></li>
+<li><p>🚀 <strong>Despliegue Fácil</strong>: Compatible con Docker, Heroku y Render</p></li>
+<li><p>🤖 <strong>Machine Learning</strong>: Modelos predictivos para clasificación</p></li>
+</ul>
+</section>
+<section id="tecnologias-utilizadas">
+<h2>🛠️ Tecnologías Utilizadas<a class="headerlink" href="#tecnologias-utilizadas" title="Permalink to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Tecnología</p></th>
+<th class="head"><p>Versión</p></th>
+<th class="head"><p>Propósito</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Python</p></td>
+<td><p>3.10+</p></td>
+<td><p>Lenguaje de programación</p></td>
+</tr>
+<tr class="row-odd"><td><p>Dash</p></td>
+<td><p>2.18.1</p></td>
+<td><p>Framework para dashboards web</p></td>
+</tr>
+<tr class="row-even"><td><p>Plotly</p></td>
+<td><p>5.24.1</p></td>
+<td><p>Visualizaciones interactivas</p></td>
+</tr>
+<tr class="row-odd"><td><p>Pandas</p></td>
+<td><p>2.2.3</p></td>
+<td><p>Manipulación de datos</p></td>
+</tr>
+<tr class="row-even"><td><p>NumPy</p></td>
+<td><p>2.1.3</p></td>
+<td><p>Cálculos numéricos</p></td>
+</tr>
+<tr class="row-odd"><td><p>Scikit-learn</p></td>
+<td><p>1.5.2</p></td>
+<td><p>Machine Learning</p></td>
+</tr>
+<tr class="row-even"><td><p>Statsmodels</p></td>
+<td><p>0.14.4</p></td>
+<td><p>Análisis estadístico</p></td>
+</tr>
+<tr class="row-odd"><td><p>Dash Bootstrap Components</p></td>
+<td><p>1.6.0</p></td>
+<td><p>Componentes UI</p></td>
+</tr>
+<tr class="row-even"><td><p>Gunicorn</p></td>
+<td><p>23.0.0</p></td>
+<td><p>Servidor WSGI para producción</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="estructura-del-proyecto">
+<h2>📁 Estructura del Proyecto<a class="headerlink" href="#estructura-del-proyecto" title="Permalink to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>water_potability_project/
+│
+├── .vscode/
+│   └── settings.json          # Configuración de VSCode
+│
+├── assets/                    # Recursos estáticos (imágenes, CSS)
+│   └── (tus imágenes aquí) 
+│
+├── data/
+│   ├── water_potability.csv   # Dataset principal
+│   └── get_data.py            # Script para cargar datos
+│
+├── .gitattributes             # Configuración de Git
+├── .gitignore                 # Archivos ignorados por Git
+├── app.py                     # Aplicación principal Dash
+├── Dockerfile                 # Configuración Docker
+├── Procfile                   # Configuración para Heroku/Render
+├── README.md                  # Documentación del proyecto
+└── requirements.txt           # Dependencias de Python
+</pre></div>
+</div>
+</section>
+<section id="instalacion-y-ejecucion">
+<h2>🚀 Instalación y Ejecución<a class="headerlink" href="#instalacion-y-ejecucion" title="Permalink to this heading">#</a></h2>
+<section id="requisitos-previos">
+<h3>0. Requisitos Previos<a class="headerlink" href="#requisitos-previos" title="Permalink to this heading">#</a></h3>
+<p>Asegúrate de tener instalado:</p>
+<ul class="simple">
+<li><p>Python 3.10 o superior</p></li>
+<li><p>Git (opcional, para clonar el repositorio)</p></li>
+<li><p>Conda/Miniconda (recomendado) o pip</p></li>
+</ul>
+</section>
+<section id="clonar-el-repositorio">
+<h3>1. Clonar el Repositorio<a class="headerlink" href="#clonar-el-repositorio" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Mariacamilamay/potabilidad-agua
+</pre></div>
+</div>
+</section>
+<section id="crear-entorno-virtual-recomendado">
+<h3>2. Crear Entorno Virtual (Recomendado)<a class="headerlink" href="#crear-entorno-virtual-recomendado" title="Permalink to this heading">#</a></h3>
+<section id="opcion-a-con-conda">
+<h4>Opción A: Con Conda<a class="headerlink" href="#opcion-a-con-conda" title="Permalink to this heading">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>water_env<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10<span class="w"> </span>-y
+conda<span class="w"> </span>activate<span class="w"> </span>water_env
+</pre></div>
+</div>
+</section>
+<section id="opcion-b-con-venv">
+<h4>Opción B: Con venv<a class="headerlink" href="#opcion-b-con-venv" title="Permalink to this heading">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>water_env
+<span class="nb">source</span><span class="w"> </span>water_env/bin/activate<span class="w">  </span><span class="c1"># Linux/Mac</span>
+water_env<span class="se">\S</span>cripts<span class="se">\a</span>ctivate<span class="w">     </span><span class="c1"># Windows</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="instalar-dependencias">
+<h3>3. Instalar Dependencias<a class="headerlink" href="#instalar-dependencias" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</section>
+<section id="preparar-el-dataset">
+<h3>4. Preparar el Dataset<a class="headerlink" href="#preparar-el-dataset" title="Permalink to this heading">#</a></h3>
+<p>Coloca tu archivo <code class="docutils literal notranslate"><span class="pre">water_potability.csv</span></code> en la carpeta <code class="docutils literal notranslate"><span class="pre">data/</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mv<span class="w"> </span>water_potability.csv<span class="w"> </span>data/
+</pre></div>
+</div>
+<p><strong>¿No tienes el dataset?</strong> Descárgalo desde Kaggle:</p>
+<ul class="simple">
+<li><p>URL: <a class="reference external" href="https://www.kaggle.com/datasets/adityakadiwal/water-potability">https://www.kaggle.com/datasets/adityakadiwal/water-potability</a></p></li>
+</ul>
+</section>
+<section id="ejecutar-la-aplicacion">
+<h3>5. Ejecutar la Aplicación<a class="headerlink" href="#ejecutar-la-aplicacion" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>app.py
+</pre></div>
+</div>
+</section>
+<section id="acceder-al-dashboard">
+<h3>6. Acceder al Dashboard<a class="headerlink" href="#acceder-al-dashboard" title="Permalink to this heading">#</a></h3>
+<p>Abre tu navegador y visita: <strong><a class="reference external" href="http://127.0.0.1:8050/">http://127.0.0.1:8050/</a></strong></p>
+</section>
+</section>
+<section id="uso-del-dashboard">
+<h2>📖 Uso del Dashboard<a class="headerlink" href="#uso-del-dashboard" title="Permalink to this heading">#</a></h2>
+<section id="navegacion">
+<h3>Navegación<a class="headerlink" href="#navegacion" title="Permalink to this heading">#</a></h3>
+<p>El dashboard tiene 5 secciones principales accesibles desde la barra de navegación:</p>
+<ol class="arabic simple">
+<li><p><strong>📋 Introducción</strong>: Contexto del proyecto</p></li>
+<li><p><strong>🎯 Problema</strong>: Planteamiento del problema de investigación</p></li>
+<li><p><strong>🎯 Objetivos</strong>: Objetivos generales y específicos</p></li>
+<li><p><strong>💡 Justificación</strong>: Importancia del proyecto</p></li>
+<li><p><strong>📊 Análisis EDA</strong>: Análisis exploratorio completo</p></li>
+</ol>
+</section>
+<section id="seccion-eda">
+<h3>Sección EDA<a class="headerlink" href="#seccion-eda" title="Permalink to this heading">#</a></h3>
+<p>La sección de Análisis Exploratorio incluye:</p>
+<ul class="simple">
+<li><p><strong>Tarjetas de Estadísticas</strong>: Resumen rápido de los datos</p></li>
+<li><p><strong>Vista de Datos</strong>: Primeras filas del dataset</p></li>
+<li><p><strong>Información General</strong>: Tipos de datos y valores nulos</p></li>
+<li><p><strong>Estadísticas Descriptivas</strong>: Media, mediana, desviación estándar, etc.</p></li>
+<li><p><strong>Distribución de Potabilidad</strong>: Gráfico de barras de la variable objetivo</p></li>
+<li><p><strong>Correlación con Potabilidad</strong>: Variables más relacionadas</p></li>
+<li><p><strong>Matriz de Correlación</strong>: Heatmap de todas las correlaciones</p></li>
+<li><p><strong>Visualizaciones Interactivas</strong>:</p>
+<ul>
+<li><p>Histogramas, Box plots y Violin plots</p></li>
+<li><p>Scatter plots con línea de tendencia opcional</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="controles-interactivos">
+<h3>Controles Interactivos<a class="headerlink" href="#controles-interactivos" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Selector de Variable</strong>: Elige qué variable visualizar</p></li>
+<li><p><strong>Tipo de Gráfico</strong>: Cambia entre histograma, box plot o violin plot</p></li>
+<li><p><strong>Scatter Plot</strong>: Selecciona variables para ejes X e Y</p></li>
+<li><p><strong>Línea de Tendencia</strong>: Activa/desactiva la regresión lineal</p></li>
+</ul>
+</section>
+</section>
+<section id="dataset">
+<h2>📊 Dataset<a class="headerlink" href="#dataset" title="Permalink to this heading">#</a></h2>
+<section id="id1">
+<h3>Descripción<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<p>El dataset contiene 3,276 muestras de agua con 10 características fisicoquímicas:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Descripción</p></th>
+<th class="head"><p>Unidad</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ph</span></code></p></td>
+<td><p>Nivel de pH</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Hardness</span></code></p></td>
+<td><p>Dureza del agua</p></td>
+<td><p>mg/L</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Solids</span></code></p></td>
+<td><p>Sólidos totales disueltos</p></td>
+<td><p>ppm</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Chloramines</span></code></p></td>
+<td><p>Cloraminas</p></td>
+<td><p>ppm</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Sulfate</span></code></p></td>
+<td><p>Sulfatos</p></td>
+<td><p>mg/L</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Conductivity</span></code></p></td>
+<td><p>Conductividad eléctrica</p></td>
+<td><p>μS/cm</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Organic_carbon</span></code></p></td>
+<td><p>Carbono orgánico total</p></td>
+<td><p>mg/L</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Trihalomethanes</span></code></p></td>
+<td><p>Trihalometanos</p></td>
+<td><p>μg/L</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Turbidity</span></code></p></td>
+<td><p>Turbidez</p></td>
+<td><p>NTU</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Potability</span></code></p></td>
+<td><p>Potabilidad (0=No potable, 1=Potable)</p></td>
+<td><p>-</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="fuente">
+<h3>Fuente<a class="headerlink" href="#fuente" title="Permalink to this heading">#</a></h3>
+<p>Dataset obtenido de Kaggle: <a class="reference external" href="https://www.kaggle.com/datasets/adityakadiwal/water-potability">Water Potability</a></p>
+<p>Visita: <strong><a class="reference external" href="http://localhost:8050/">http://localhost:8050/</a></strong></p>
+</section>
+</section>
+<section id="contribuciones">
+<h2>🤝 Contribuciones<a class="headerlink" href="#contribuciones" title="Permalink to this heading">#</a></h2>
+<p>Las contribuciones son bienvenidas. Para contribuir:</p>
+<ol class="arabic simple">
+<li><p>Fork el repositorio</p></li>
+<li><p>Crea una rama para tu feature (<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">feature/AmazingFeature</span></code>)</p></li>
+<li><p>Commit tus cambios (<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-m</span> <span class="pre">'Add</span> <span class="pre">some</span> <span class="pre">AmazingFeature'</span></code>)</p></li>
+<li><p>Push a la rama (<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span> <span class="pre">origin</span> <span class="pre">feature/AmazingFeature</span></code>)</p></li>
+<li><p>Abre un Pull Request</p></li>
+</ol>
+</section>
+<section id="licencia">
+<h2>📄 Licencia<a class="headerlink" href="#licencia" title="Permalink to this heading">#</a></h2>
+<p>Este proyecto está bajo la Licencia MIT. Ver el archivo <code class="docutils literal notranslate"><span class="pre">LICENSE</span></code> para más detalles.</p>
+</section>
+<section id="autores">
+<h2>👥 Autores<a class="headerlink" href="#autores" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Maria May</strong> - <em>Desarrolladora</em></p></li>
+<li><p><strong>Andrea Padilla</strong> - <em>Desarrolladora</em></p></li>
+<li><p><strong>Alberto Jimenez</strong> - <em>Desarrollador</em></p></li>
+<li><p><strong>Winston Pardo</strong> - <em>Desarrollador</em></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./water_potability_project"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-de-contenidos">📋 Tabla de Contenidos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#descripcion">🎯 Descripción</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contexto-del-problema">Contexto del Problema</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#caracteristicas">✨ Características</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tecnologias-utilizadas">🛠️ Tecnologías Utilizadas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estructura-del-proyecto">📁 Estructura del Proyecto</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instalacion-y-ejecucion">🚀 Instalación y Ejecución</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requisitos-previos">0. Requisitos Previos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clonar-el-repositorio">1. Clonar el Repositorio</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#crear-entorno-virtual-recomendado">2. Crear Entorno Virtual (Recomendado)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#opcion-a-con-conda">Opción A: Con Conda</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#opcion-b-con-venv">Opción B: Con venv</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instalar-dependencias">3. Instalar Dependencias</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preparar-el-dataset">4. Preparar el Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejecutar-la-aplicacion">5. Ejecutar la Aplicación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#acceder-al-dashboard">6. Acceder al Dashboard</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-del-dashboard">📖 Uso del Dashboard</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#navegacion">Navegación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seccion-eda">Sección EDA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#controles-interactivos">Controles Interactivos</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset">📊 Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Descripción</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fuente">Fuente</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contribuciones">🤝 Contribuciones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#licencia">📄 Licencia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autores">👥 Autores</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Maria May, Andrea Padilla, Alberto Jimenez, Winston Pardo
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
