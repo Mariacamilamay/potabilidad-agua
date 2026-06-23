@@ -1,11 +1,12 @@
-# Welcome to your Jupyter Book
+# Bienvenido a tu Libro de Jupyter
 
-This is a small sample book to give you a feel for how book content is
-structured.
-It shows off a few of the major file types, as well as some sample content.
-It does not go in-depth into any particular topic - check out [the Jupyter Book documentation](https://jupyterbook.org) for more information.
+Este libro de Jupyter presenta el desarrollo y análisis del proyecto de potabilidad del agua, donde se documentan las diferentes etapas realizadas para la exploración, preparación y análisis de los datos.
 
-Check out the content pages bundled with this sample book to see more.
+A través de este documento se muestran los procesos aplicados, los análisis exploratorios, el tratamiento de la información y los resultados obtenidos, con el propósito de comprender los factores asociados a la calidad del agua y apoyar la toma de decisiones basada en datos.
 
-```{tableofcontents}
+En las siguientes secciones encontrarás la estructura del proyecto, junto con los análisis y resultados desarrollados durante el proceso.
+
+```{tabladecontenido}
+
+
 ```

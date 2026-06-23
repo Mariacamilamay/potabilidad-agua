@@ -4,6 +4,11 @@
 format: jb-book
 root: intro
 chapters:
-- file: markdown
-- file: notebooks
-- file: markdown-notebooks
+- file: 01_introduccion
+- file: 02_planteamiento_del_problema
+- file: 03_Objetivos
+- file: 04_Justificacion
+- file: 05_marco_teorico
+- file: 06_Analisis_exploratorio_de_datos
+- file: 07_Tratamiento_de_datos_faltantes
+- file: 08_Machine_Learning
