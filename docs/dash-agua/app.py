@@ -305,9 +305,9 @@ eda_section = dbc.Container([
                         dcc.Dropdown(
                             id='dropdown-tipo-grafico',
                             options=[
-                                {'label': '📊 Histograma', 'value': 'histogram'},
-                                {'label': '📦 Box Plot', 'value': 'box'},
-                                {'label': '🎻 Violin Plot', 'value': 'violin'}
+                                {'label': ' Histograma', 'value': 'histogram'},
+                                {'label': ' Box Plot', 'value': 'box'},
+                                {'label': ' Violin Plot', 'value': 'violin'}
                             ],
                             value='histogram',
                             clearable=False,
@@ -343,8 +343,8 @@ eda_section = dbc.Container([
                         dcc.Dropdown(
                             id='dropdown-scatter-type',
                             options=[
-                                {'label': '⚪ Scatter Simple', 'value': 'scatter'},
-                                {'label': '📈 Con Línea de Tendencia', 'value': 'scatter+trend'}
+                                {'label': ' Scatter Simple', 'value': 'scatter'},
+                                {'label': ' Con Línea de Tendencia', 'value': 'scatter+trend'}
                             ],
                             value='scatter',
                             clearable=False,
@@ -590,6 +590,6 @@ def actualizar_scatter(col_x, col_y, tipo):
 # 8. EJECUTAR APP
 # ==========================================
 if __name__ == '__main__':
-    print("🚀 Iniciando servidor Dash con Bootstrap...")
+    print(" Iniciando servidor Dash con Bootstrap...")
     print(" Abra http://127.0.0.1:8050 en su navegador")
     app.run(debug=True, use_reloader=False)
