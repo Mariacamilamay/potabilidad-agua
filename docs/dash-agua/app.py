@@ -72,11 +72,11 @@ def create_stat_card(title, value, subtitle, icon, color="primary"):
 # Navbar
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.NavItem(dbc.NavLink("📋 Introducción", href="#", id="nav-intro", active=True)),
-        dbc.NavItem(dbc.NavLink("🎯 Problema", href="#", id="nav-problema")),
-        dbc.NavItem(dbc.NavLink("🎯 Objetivos", href="#", id="nav-objetivos")),
-        dbc.NavItem(dbc.NavLink("💡 Justificación", href="#", id="nav-justificacion")),
-        dbc.NavItem(dbc.NavLink("📊 Análisis EDA", href="#", id="nav-eda")),
+        dbc.NavItem(dbc.NavLink(" Introducción", href="#", id="nav-intro", active=True)),
+        dbc.NavItem(dbc.NavLink(" Problema", href="#", id="nav-problema")),
+        dbc.NavItem(dbc.NavLink(" Objetivos", href="#", id="nav-objetivos")),
+        dbc.NavItem(dbc.NavLink(" Justificación", href="#", id="nav-justificacion")),
+        dbc.NavItem(dbc.NavLink(" Análisis EDA", href="#", id="nav-eda")),
     ],
     brand="🌊 Potabilidad del Agua",
     brand_href="#",
@@ -147,11 +147,11 @@ objetivos_section = dbc.Container([
         ]),
         html.H5("Objetivos Específicos", className="mb-3"),
         dbc.ListGroup([
-            dbc.ListGroupItem("📊 Realizar un análisis exploratorio de los datos", className="d-flex align-items-center"),
-            dbc.ListGroupItem("🔍 Identificar las variables con mayor influencia", className="d-flex align-items-center"),
-            dbc.ListGroupItem("⚙️ Preparar y transformar los datos", className="d-flex align-items-center"),
-            dbc.ListGroupItem("🤖 Entrenar y evaluar modelos de clasificación", className="d-flex align-items-center"),
-            dbc.ListGroupItem("📈 Comparar el desempeño de los modelos", className="d-flex align-items-center"),
+            dbc.ListGroupItem(" Realizar un análisis exploratorio de los datos", className="d-flex align-items-center"),
+            dbc.ListGroupItem(" Identificar las variables con mayor influencia", className="d-flex align-items-center"),
+            dbc.ListGroupItem(" Preparar y transformar los datos", className="d-flex align-items-center"),
+            dbc.ListGroupItem(" Entrenar y evaluar modelos de clasificación", className="d-flex align-items-center"),
+            dbc.ListGroupItem(" Comparar el desempeño de los modelos", className="d-flex align-items-center"),
         ], flush=True, className="mb-3")
     ], color="success")
 ], className="py-4")
