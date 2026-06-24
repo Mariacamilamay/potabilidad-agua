@@ -1,0 +1,33 @@
+Traceback (most recent call last):
+  File "C:\Users\mmay\AppDatal\miniconda3\envs\water_ml\lib\site-packages\jupyter_core\utils\__init__.py", line 154, in wrapped
+    asyncio.get_running_loop()
+RuntimeError: no running event loop
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\mmay\AppDatal\miniconda3\envs\water_ml\lib\site-packages\jupyter_cache\executors\utils.py", line 58, in single_nb_execution
+    executenb(
+  File "C:\Users\mmay\AppDatal\miniconda3\envs\water_ml\lib\site-packages\nbclient\client.py", line 1305, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "C:\Users\mmay\AppDatal\miniconda3\envs\water_ml\lib\site-packages\jupyter_core\utils\__init__.py", line 158, in wrapped
+    return loop.run_until_complete(inner)
+  File "C:\Users\mmay\AppDatal\miniconda3\envs\water_ml\lib\asyncio\base_events.py", line 647, in run_until_complete
+    return future.result()
+  File "C:\Users\mmay\AppDatal\miniconda3\envs\water_ml\lib\site-packages\nbclient\client.py", line 705, in async_execute
+    await self.async_execute_cell(
+  File "C:\Users\mmay\AppDatal\miniconda3\envs\water_ml\lib\site-packages\nbclient\client.py", line 1001, in async_execute_cell
+    exec_reply = await self.task_poll_for_reply
+  File "C:\Users\mmay\AppDatal\miniconda3\envs\water_ml\lib\site-packages\nbclient\client.py", line 802, in _async_poll_for_reply
+    error_on_timeout_execute_reply = await self._async_handle_timeout(timeout, cell)
+  File "C:\Users\mmay\AppDatal\miniconda3\envs\water_ml\lib\site-packages\nbclient\client.py", line 852, in _async_handle_timeout
+    raise CellTimeoutError.error_from_timeout_and_cell(
+nbclient.exceptions.CellTimeoutError: A cell timed out while it was being executed, after 30 seconds.
+The message was: Cell execution timed out.
+Here is a preview of the cell contents:
+-------------------
+['pipeline_rf = make_pipeline(', '    StandardScaler(),', '    RandomForestClassifier(random_state=42)', ')', '']
+...
+['mejor_pipeline_rf = grid_search_rf.best_estimator_', 'print(f"\\nMejores params: {grid_search_rf.best_params_}")', '', "resultado_rf = evaluar_modelo('Random Forest', mejor_pipeline_rf,", '                              X_train_scaled, X_test_scaled, y_train_smote, y_test)']
+-------------------
+

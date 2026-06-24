@@ -9,6 +9,4 @@ chapters:
 - file: 03_Objetivos
 - file: 04_Justificacion
 - file: 05_marco_teorico
-- file: 06_Analisis_exploratorio_de_datos
-- file: 07_Tratamiento_de_datos_faltantes
-- file: 08_Machine_Learning
+- file: 06_proyecto_potabilidad_del_agua

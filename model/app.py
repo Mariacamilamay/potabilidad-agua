@@ -39,7 +39,7 @@ except Exception as e:
     st.stop()
 
 # Sidebar con información
-st.sidebar.header(" Información")
+st.sidebar.header("ℹ️ Información")
 st.sidebar.markdown(f"""
 - **Modelo:** {meta['mejor_modelo']}
 - **ROC AUC:** {meta['roc_auc_test']:.4f}
@@ -64,7 +64,7 @@ else:
 st.sidebar.info(f"Umbral activo: **{umbral:.4f}**")
 
 # Formulario de entrada
-st.header(" Ingrese los parámetros de la muestra")
+st.header("🧪 Ingrese los parámetros de la muestra")
 
 col1, col2, col3 = st.columns(3)
 
@@ -84,7 +84,7 @@ with col3:
     turbidity = st.number_input("Turbidity (NTU)", min_value=0.0, value=5.0, step=0.5)
 
 # Botón de predicción
-if st.button(" Predecir Potabilidad", type="primary", use_container_width=True):
+if st.button("🔬 Predecir Potabilidad", type="primary", use_container_width=True):
     datos = pd.DataFrame([{
         'ph': ph,
         'Hardness': hardness,
@@ -101,7 +101,7 @@ if st.button(" Predecir Potabilidad", type="primary", use_container_width=True):
     decision = prob >= umbral
 
     st.markdown("---")
-    st.subheader(" Resultado de la Predicción")
+    st.subheader("📊 Resultado de la Predicción")
 
     col_a, col_b, col_c = st.columns(3)
 
@@ -113,9 +113,9 @@ if st.button(" Predecir Potabilidad", type="primary", use_container_width=True):
 
     with col_c:
         if decision:
-            st.success(" AGUA POTABLE ✅")
+            st.success("✅ AGUA POTABLE")
         else:
-            st.error("⚠️ AGUA NO POTABLE ❌")
+            st.error("❌ AGUA NO POTABLE")
 
     # Barra de progreso visual
     st.progress(float(prob))

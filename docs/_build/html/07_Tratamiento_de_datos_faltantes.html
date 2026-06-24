@@ -65,6 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = '07_Tratamiento_de_datos_faltantes';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="8. Preprocesamiento de Datos" href="08_Machine_Learning.html" />
     <link rel="prev" title="6. Analisis Exploratorio de Datos" href="06_Analisis_exploratorio_de_datos.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -162,7 +163,7 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    Welcome to your Jupyter Book
+                    Bienvenido a tu Libro de Jupyter
                 </a>
             </li>
         </ul>
@@ -174,6 +175,13 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="05_marco_teorico.html">5 Marco teorico</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06_Analisis_exploratorio_de_datos.html">6. Analisis Exploratorio de Datos</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">7. Tratamiento de Datos Faltantes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_Machine_Learning.html">8. Preprocesamiento de Datos</a></li>
+
+
+
+
+
+
 </ul>
 
     </div>
@@ -418,7 +426,7 @@ dtype: int64
 </div>
 </div>
 </div>
-<p>Se identificó que las variables pH, Sulfate y Trihalomethanes presentan datos ausentes, por lo que se requiere aplicar una estrategia de tratamiento antes del análisis.</p>
+<p>El análisis de valores faltantes muestra que las variables con datos ausentes son Sulfate (781 registros), pH (491 registros) y Trihalomethanes (162 registros). Las demás variables no presentan valores nulos, por lo que mantienen la totalidad de los registros disponibles para el análisis.</p>
 <p>7.2 Definición del umbral de eliminación</p>
 <p>Se estableció un umbral del 5% del total de registros del dataset:</p>
 <div class="cell docutils container">
@@ -429,7 +437,7 @@ dtype: int64
 </div>
 </div>
 <p>Interpretación:</p>
-<p>Este umbral permite determinar qué variables tienen una baja proporción de valores faltantes, las cuales pueden ser tratadas sin afectar significativamente la información del conjunto de datos.</p>
+<p>El cálculo del umbral establece el 5% del total de registros del dataset como criterio para evaluar el tratamiento de valores faltantes. Este valor permite identificar si una variable tiene una cantidad significativa de datos ausentes y definir si es necesario aplicar estrategias como imputación o eliminación.</p>
 <p>7.3 Selección de variables con pocos valores faltantes</p>
 <p>Se seleccionaron las variables cuyo número de valores faltantes era menor o igual al umbral establecido:</p>
 <div class="cell docutils container">
@@ -440,7 +448,7 @@ dtype: int64
 </div>
 </div>
 <p>Interpretación:</p>
-<p>Las variables seleccionadas presentan una cantidad reducida de datos faltantes, por lo que pueden ser tratadas mediante eliminación de registros sin generar un impacto significativo.</p>
+<p>Las variables seleccionadas presentan una cantidad baja de valores faltantes, lo que permite su tratamiento mediante eliminación de registros sin afectar de forma significativa la calidad del análisis ni la representatividad del conjunto de datos.</p>
 <p>7.4 Eliminación de registros con valores faltantes</p>
 <p>Se eliminaron los registros que contenían valores faltantes en las variables seleccionadas:</p>
 <div class="cell docutils container">
@@ -451,7 +459,7 @@ dtype: int64
 </div>
 </div>
 <p>Interpretación:</p>
-<p>Este procedimiento permitió eliminar únicamente las filas incompletas asociadas a variables con baja proporción de datos faltantes, preservando la mayor cantidad posible de información.</p>
+<p>Esta instrucción elimina del dataset todas las filas que contienen valores nulos en las columnas seleccionadas previamente (cols_to_drop). Al usar inplace=True, los cambios se aplican directamente sobre el DataFrame original, asegurando que el conjunto de datos quede limpio y listo para el análisis sin registros incompletos en esas variables.</p>
 <p>7.5 Comparación de distribuciones</p>
 <p>Para evaluar el impacto de la eliminación de registros, se compararon las distribuciones de las variables con datos faltantes antes y después del tratamiento.</p>
 <div class="cell docutils container">
@@ -505,7 +513,7 @@ dtype: int64
 <img alt="_images/16f3e45ed93b52b6f1dc63c7e35563b76806cfd21835001833d29e81e675a1fa.png" src="_images/16f3e45ed93b52b6f1dc63c7e35563b76806cfd21835001833d29e81e675a1fa.png" />
 </div>
 </div>
-<p>Las distribuciones permiten observar si la eliminación de registros alteró significativamente la forma de las variables analizadas.</p>
+<p>Las distribuciones de las variables pH, Sulfate y Trihalomethanes se mantienen prácticamente iguales después de eliminar los valores nulos. Esto indica que la eliminación de registros no generó un sesgo significativo ni alteró la forma de las distribuciones, por lo que el proceso de limpieza fue adecuado y no afectó el comportamiento general de los datos.</p>
 <p>7.6 Validación mediante la prueba KS</p>
 <p>Se aplicó la prueba KS para comparar estadísticamente las distribuciones antes y después del tratamiento:</p>
 <div class="cell docutils container">
@@ -557,7 +565,8 @@ Valor p: 1.0
 <p>Trihalomethanes → p-value = 1.0</p>
 <p>Interpretación</p>
 <p>En todos los casos, el valor p fue mayor a 0.05, por lo que no se encontraron diferencias estadísticamente significativas entre las distribuciones originales y las distribuciones tras el tratamiento.</p>
-<p>Esto indica que la eliminación de registros no alteró de forma significativa el comportamiento de las variables analizadas.</p>
+<p>Esto indica que la eliminación de registros no alteró de forma significativa el comportamiento de las variables analizadas, es decir, la forma general de las distribuciones se mantiene estable antes y después del proceso de depuración de datos.</p>
+<p>Adicionalmente, los estadísticos KS cercanos a 0 refuerzan esta conclusión, evidenciando que no hubo cambios relevantes en la estructura de los datos, lo cual sugiere que el tratamiento aplicado fue conservador y no introdujo sesgos ni distorsiones en las variables evaluadas.</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -598,6 +607,15 @@ Valor p: 1.0
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">6. Analisis Exploratorio de Datos</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="08_Machine_Learning.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">8. Preprocesamiento de Datos</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>

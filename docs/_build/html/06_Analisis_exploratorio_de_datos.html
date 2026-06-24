@@ -163,7 +163,7 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    Welcome to your Jupyter Book
+                    Bienvenido a tu Libro de Jupyter
                 </a>
             </li>
         </ul>
@@ -175,6 +175,13 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="05_marco_teorico.html">5 Marco teorico</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">6. Analisis Exploratorio de Datos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07_Tratamiento_de_datos_faltantes.html">7. Tratamiento de Datos Faltantes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_Machine_Learning.html">8. Preprocesamiento de Datos</a></li>
+
+
+
+
+
+
 </ul>
 
     </div>
@@ -534,12 +541,7 @@ memory usage: 256.1 KB
 </div>
 </div>
 <p>Interpretación</p>
-<p>Permite identificar:</p>
-<p>1 Número de registros.</p>
-<p>2 Tipo de dato de cada variable.</p>
-<p>3 Cantidad de valores no nulos.</p>
-<p>4 Presencia inicial de datos faltantes.</p>
-<p>6.4 Estadísticas descriptivas</p>
+<p>El dataset contiene 3.276 registros y 10 variables, donde 9 corresponden a características de calidad del agua y 1 a la variable objetivo Potability. La mayoría de los datos son numéricos. Se identifican valores faltantes en pH, Sulfate y Trihalomethanes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
@@ -687,7 +689,7 @@ memory usage: 256.1 KB
 </div></div></div>
 </div>
 <p>Interpretación</p>
-<p>Las estadísticas descriptivas permiten conocer el comportamiento general de las variables numéricas. Se observa que las características presentan diferentes rangos y niveles de dispersión, evidenciando variabilidad en las mediciones de calidad del agua.</p>
+<p>El análisis estadístico muestra que las variables presentan diferentes rangos de variación en sus valores. El pH tiene un promedio de 7.08, cercano a la neutralidad, mientras que parámetros como Solids y Conductivity presentan una mayor dispersión debido a la variabilidad en sus concentraciones. La variable objetivo Potability tiene una media de 0.39, indicando que aproximadamente el 39% de las muestras corresponden a agua potable.</p>
 <p>6.5 Analizar y Visualizar la Variable Objetivo</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -746,12 +748,12 @@ Name: count, dtype: int64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\mmay\AppData\Local\Temp\ipykernel_26092\361392415.py:10: FutureWarning: 
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\mmay\AppData\Local\Temp\ipykernel_26964\361392415.py:10: FutureWarning: 
 
 Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
 
   ax = sns.countplot(
-C:\Users\mmay\AppData\Local\Temp\ipykernel_26092\361392415.py:17: UserWarning: set_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator.
+C:\Users\mmay\AppData\Local\Temp\ipykernel_26964\361392415.py:17: UserWarning: set_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator.
   ax.set_xticklabels([&#39;No Potable&#39;, &#39;Potable&#39;])
 </pre></div>
 </div>
@@ -759,7 +761,7 @@ C:\Users\mmay\AppData\Local\Temp\ipykernel_26092\361392415.py:17: UserWarning: s
 </div>
 </div>
 <p>Interpretación</p>
-<p>La variable Potability presenta dos categorías: agua no potable y agua potable. Se observa que la categoría No potable concentra la mayor cantidad de registros, con aproximadamente el 61% de las muestras, mientras que la categoría Potable representa cerca del 39%. Esto evidencia un desbalance moderado entre las clases, aspecto que deberá considerarse en las etapas posteriores de modelado.</p>
+<p>La variable objetivo Potability presenta una distribución de 1.998 muestras clasificadas como no potables (0) y 1.278 muestras clasificadas como potables (1). Esto indica que el conjunto de datos tiene mayor cantidad de registros no potables, con una diferencia entre clases que debe ser considerada en el análisis y entrenamiento del modelo.</p>
 <p>6.6. Identificación y Visualización de las variables que se relacionan más con la potabilidad</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -835,7 +837,7 @@ Name: Potability, dtype: float64
 </div>
 </div>
 <p>Interpretación</p>
-<p>Ninguna de las variables presenta una correlación lineal fuerte con la potabilidad del agua. Las correlaciones obtenidas son muy bajas y cercanas a cero, lo que indica que la potabilidad no depende de una única característica fisicoquímica. La variable con mayor correlación positiva es Solids (0.0337), mientras que Organic_carbon (-0.0300) presenta la mayor correlación negativa; sin embargo, ambas relaciones son débiles.</p>
+<p>La correlación de las variables con Potability muestra valores cercanos a cero, lo que indica que no existe una relación lineal fuerte entre los parámetros de calidad del agua y la potabilidad. La variable con mayor correlación positiva es Solids (0.0337), seguida de Chloramines (0.0238), aunque su influencia es baja. Por otro lado, variables como Organic_carbon (-0.0300) y Sulfate (-0.0236) presentan una relación negativa débil. Estos resultados indican que la predicción de la potabilidad probablemente depende de la combinación de varias variables y no de un único parámetro.</p>
 <p>6.7 Matriz de correlación</p>
 <p>Ahora vamos a analizar la relación entre todas las variables.</p>
 <div class="cell docutils container">
