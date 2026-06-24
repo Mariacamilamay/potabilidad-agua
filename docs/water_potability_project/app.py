@@ -128,13 +128,13 @@ alert_matriz = (
 
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.NavItem(dbc.NavLink("📋 Introducción", href="#", id="nav-intro", active=True)),
-        dbc.NavItem(dbc.NavLink("🎯 Problema", href="#", id="nav-problema")),
+        dbc.NavItem(dbc.NavLink(" Introducción", href="#", id="nav-intro", active=True)),
+        dbc.NavItem(dbc.NavLink(" Problema", href="#", id="nav-problema")),
         dbc.NavItem(dbc.NavLink(" Objetivos", href="#", id="nav-objetivos")),
-        dbc.NavItem(dbc.NavLink("💡 Justificación", href="#", id="nav-justificacion")),
-        dbc.NavItem(dbc.NavLink("📊 Análisis EDA", href="#", id="nav-eda")),
+        dbc.NavItem(dbc.NavLink(" Justificación", href="#", id="nav-justificacion")),
+        dbc.NavItem(dbc.NavLink(" Análisis EDA", href="#", id="nav-eda")),
     ],
-    brand="🌊 Potabilidad del Agua",
+    brand=" Potabilidad del Agua",
     brand_href="#",
     color="primary",
     dark=True,
@@ -184,11 +184,11 @@ objetivos_section = dbc.Container([
         ]),
         html.H5("Objetivos Específicos", className="mb-3"),
         dbc.ListGroup([
-            dbc.ListGroupItem("📊 Realizar un análisis exploratorio de los datos", className="d-flex align-items-center"),
-            dbc.ListGroupItem("🔍 Identificar las variables con mayor influencia", className="d-flex align-items-center"),
-            dbc.ListGroupItem("⚙️ Preparar y transformar los datos", className="d-flex align-items-center"),
-            dbc.ListGroupItem("🤖 Entrenar y evaluar modelos de clasificación", className="d-flex align-items-center"),
-            dbc.ListGroupItem("📈 Comparar el desempeño de los modelos", className="d-flex align-items-center"),
+            dbc.ListGroupItem(" Realizar un análisis exploratorio de los datos", className="d-flex align-items-center"),
+            dbc.ListGroupItem(" Identificar las variables con mayor influencia", className="d-flex align-items-center"),
+            dbc.ListGroupItem(" Preparar y transformar los datos", className="d-flex align-items-center"),
+            dbc.ListGroupItem(" Entrenar y evaluar modelos de clasificación", className="d-flex align-items-center"),
+            dbc.ListGroupItem(" Comparar el desempeño de los modelos", className="d-flex align-items-center"),
         ], flush=True, className="mb-3")
     ], color="success")
 ], className="py-4")
@@ -296,7 +296,7 @@ eda_section = dbc.Container([
 
     dbc.Row([
         dbc.Col([
-            create_card("🔍 Visualizaciones Interactivas", [
+            create_card(" Visualizaciones Interactivas", [
                 dbc.Row([
                     dbc.Col([
                         html.Label("Variable para Histograma:", className="fw-bold"),
@@ -313,9 +313,9 @@ eda_section = dbc.Container([
                         dcc.Dropdown(
                             id='dropdown-tipo-grafico',
                             options=[
-                                {'label': '📊 Histograma', 'value': 'histogram'},
-                                {'label': '📦 Box Plot', 'value': 'box'},
-                                {'label': '🎻 Violin Plot', 'value': 'violin'}
+                                {'label': ' Histograma', 'value': 'histogram'},
+                                {'label': ' Box Plot', 'value': 'box'},
+                                {'label': ' Violin Plot', 'value': 'violin'}
                             ],
                             value='histogram',
                             clearable=False,
@@ -351,8 +351,8 @@ eda_section = dbc.Container([
                         dcc.Dropdown(
                             id='dropdown-scatter-type',
                             options=[
-                                {'label': '⚪ Scatter Simple', 'value': 'scatter'},
-                                {'label': '📈 Con Línea de Tendencia', 'value': 'scatter+trend'}
+                                {'label': ' Scatter Simple', 'value': 'scatter'},
+                                {'label': ' Con Línea de Tendencia', 'value': 'scatter+trend'}
                             ],
                             value='scatter',
                             clearable=False,
