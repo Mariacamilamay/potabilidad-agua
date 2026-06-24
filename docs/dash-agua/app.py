@@ -288,7 +288,7 @@ eda_section = dbc.Container([
     # Visualizaciones Interactivas
     dbc.Row([
         dbc.Col([
-            create_card("🔍 Visualizaciones Interactivas", [
+            create_card(" Visualizaciones Interactivas", [
                 dbc.Row([
                     dbc.Col([
                         html.Label("Variable para Histograma:", className="fw-bold"),
